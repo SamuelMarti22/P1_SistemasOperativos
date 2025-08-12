@@ -1,99 +1,181 @@
 #include <iostream>
 #include <vector>
-#include <limits> // Para manejo de límites de entrada
+#include <limits>
+#include <memory>
 #include "persona.h"
 #include "generador.h"
+#include "monitor.h"
 
-// Muestra menú de opciones al usuario
+/**
+ * Muestra el menú principal de la aplicación.
+ * 
+ * POR QUÉ: Guiar al usuario a través de las funcionalidades disponibles.
+ * CÓMO: Imprimiendo las opciones en consola.
+ * PARA QUÉ: Interacción amigable con el usuario.
+ */
 void mostrarMenu() {
-    std::cout << "\n\n=== MENÚ DE VISUALIZACIÓN ===";
+    std::cout << "\n\n=== MENÚ PRINCIPAL ===";
+    std::cout << "\n0. Crear nuevo conjunto de datos";
     std::cout << "\n1. Mostrar resumen de todas las personas";
     std::cout << "\n2. Mostrar detalle completo por índice";
     std::cout << "\n3. Buscar persona por ID";
-    std::cout << "\n4. Salir";
+    std::cout << "\n4. Mostrar estadísticas de rendimiento";
+    std::cout << "\n5. Exportar estadísticas a CSV";
+    std::cout << "\n6. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
+/**
+ * Punto de entrada principal del programa.
+ * 
+ * POR QUÉ: Iniciar la aplicación y manejar el flujo principal.
+ * CÓMO: Mediante un bucle que muestra el menú y procesa la opción seleccionada.
+ * PARA QUÉ: Ejecutar las funcionalidades del sistema.
+ */
 int main() {
-    // Inicializa semilla para números aleatorios
-    srand(time(nullptr));
-    int n;
+    srand(time(nullptr)); // Semilla para generación aleatoria
     
-    // Solicita tamaño de la colección
-    std::cout << "Ingrese el número de personas a generar: ";
-    std::cin >> n;
+    // Puntero inteligente para gestionar la colección de personas
+    // POR QUÉ: Evitar fugas de memoria y garantizar liberación automática.
+    std::unique_ptr<std::vector<Persona>> personas = nullptr;
     
-    // Validar entrada de tamaño (debe ser positivo)
-    if (n <= 0) {
-        std::cerr << "Error: Debe generar al menos 1 persona\n";
-        return 1; // Retorna código de error
-    }
+    Monitor monitor; // Monitor para medir rendimiento
     
-    // Generar la colección de personas
-    std::vector<Persona> personas = generarColeccion(n);
-    // Almacenar tamaño en variable size_t para evitar problemas de signo
-    const size_t tam = personas.size();  
-
     int opcion;
-    // Bucle principal del menú
     do {
         mostrarMenu();
         std::cin >> opcion;
         
+        // Variables locales para uso en los casos
+        size_t tam = 0;
+        int indice;
+        std::string idBusqueda;
+        
+        // Iniciar medición de tiempo y memoria para la operación actual
+        monitor.iniciar_tiempo();
+        long memoria_inicio = monitor.obtener_memoria();
+        
         switch(opcion) {
-            case 1: // Mostrar resumen de todas las personas
+            case 0: { // Crear nuevo conjunto de datos
+                int n;
+                std::cout << "\nIngrese el número de personas a generar: ";
+                std::cin >> n;
+                
+                if (n <= 0) {
+                    std::cout << "Error: Debe generar al menos 1 persona\n";
+                    break;
+                }
+                
+                // Generar el nuevo conjunto de personas
+                auto nuevasPersonas = generarColeccion(n);
+                tam = nuevasPersonas.size();
+                
+                // Mover el conjunto al puntero inteligente (propiedad única)
+                personas = std::make_unique<std::vector<Persona>>(std::move(nuevasPersonas));
+                
+                // Medir tiempo y memoria usada
+                double tiempo_gen = monitor.detener_tiempo();
+                long memoria_gen = monitor.obtener_memoria() - memoria_inicio;
+                
+                std::cout << "Generadas " << tam << " personas en " 
+                          << tiempo_gen << " ms, Memoria: " << memoria_gen << " KB\n";
+                
+                // Registrar la operación
+                monitor.registrar("Crear datos", tiempo_gen, memoria_gen);
+                break;
+            }
+                
+            case 1: { // Mostrar resumen de todas las personas
+                if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+                
+                tam = personas->size();
                 std::cout << "\n=== RESUMEN DE PERSONAS (" << tam << ") ===\n";
-                // Usar size_t para índice para evitar advertencias de comparación
                 for(size_t i = 0; i < tam; ++i) {
                     std::cout << i << ". ";
-                    personas[i].mostrarResumen(); // Método compacto
+                    (*personas)[i].mostrarResumen();
                     std::cout << "\n";
                 }
-                break;
                 
-            case 2: { // Mostrar detalles por índice numérico
-                int indice;
+                double tiempo_mostrar = monitor.detener_tiempo();
+                long memoria_mostrar = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Mostrar resumen", tiempo_mostrar, memoria_mostrar);
+                break;
+            }
+                
+            case 2: { // Mostrar detalle por índice
+                if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+                
+                tam = personas->size();
                 std::cout << "\nIngrese el índice (0-" << tam-1 << "): ";
                 if(std::cin >> indice) {
-                    // Verificar que el índice esté en rango válido
-                    // Primero comprueba que no sea negativo, luego compara con tamaño
                     if(indice >= 0 && static_cast<size_t>(indice) < tam) {
-                        personas[indice].mostrar(); // Método detallado
+                        (*personas)[indice].mostrar();
                     } else {
                         std::cout << "Índice fuera de rango!\n";
                     }
                 } else {
-                    // Limpiar estado de error en cin
                     std::cout << "Entrada inválida!\n";
                     std::cin.clear();
-                    // Descarta entrada incorrecta
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 }
+                
+                double tiempo_detalle = monitor.detener_tiempo();
+                long memoria_detalle = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Mostrar detalle", tiempo_detalle, memoria_detalle);
                 break;
             }
                 
-            case 3: { // Buscar por ID exacto
-                std::string idBusqueda;
+            case 3: { // Buscar por ID
+                if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+                
                 std::cout << "\nIngrese el ID a buscar: ";
                 std::cin >> idBusqueda;
                 
-                // Intenta encontrar la persona
-                if(const Persona* encontrada = buscarPorID(personas, idBusqueda)) {
-                    encontrada->mostrar(); // Muestra detalles si la encontró
+                if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
+                    encontrada->mostrar();
                 } else {
                     std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
                 }
+                
+                double tiempo_busqueda = monitor.detener_tiempo();
+                long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Buscar por ID", tiempo_busqueda, memoria_busqueda);
                 break;
             }
                 
-            case 4: // Salir del programa
+            case 4: // Mostrar estadísticas de rendimiento
+                monitor.mostrar_resumen();
+                break;
+                
+            case 5: // Exportar estadísticas a CSV
+                monitor.exportar_csv();
+                break;
+                
+            case 6: // Salir
                 std::cout << "Saliendo...\n";
                 break;
                 
-            default: // Opción no válida
+            default:
                 std::cout << "Opción inválida!\n";
         }
-    } while(opcion != 4); // Repite hasta seleccionar salir
+        
+        // Mostrar estadísticas de la operación (excepto para opciones 4,5,6)
+        if (opcion >= 0 && opcion <= 3) {
+            double tiempo = monitor.detener_tiempo();
+            long memoria = monitor.obtener_memoria() - memoria_inicio;
+            monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
+        }
+        
+    } while(opcion != 6);
     
     return 0;
 }
