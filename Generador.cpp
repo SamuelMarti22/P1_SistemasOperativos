@@ -1,11 +1,12 @@
+
 #include "generador.h"
 #include <cstdlib>   // rand(), srand()
 #include <ctime>     // time()
-#include <random>    // std::mt19937, std::uniform_real_distribution
+#include <random>    // Generadores aleatorios modernos
 #include <vector>
-#include <algorithm> // std::find_if
+#include <algorithm> // Para find_if
 
-// Bases de datos para generación realista
+// --- Bases de datos para generación realista ---
 
 // Nombres femeninos comunes en Colombia
 const std::vector<std::string> nombresFemeninos = {
@@ -17,7 +18,8 @@ const std::vector<std::string> nombresFemeninos = {
 const std::vector<std::string> nombresMasculinos = {
     "Juan", "Carlos", "José", "James", "Andrés", "Miguel", "Luis", "Pedro", "Alejandro", "Ricardo",
     "Felipe", "David", "Jorge", "Santiago", "Daniel", "Fernando", "Diego", "Rafael", "Martín", "Óscar",
-    "Edison", "Nestor", "Gertridis"
+    "Edison", "Sofia","Camila","Juana","Ana","Laura","Karla","Andrea","Daniela","Alejandra","Martina",
+    "Nelly","María","Nestor","Trinidad","Fernanda", "Carolina", "Lina", "Gertridis"
 };
 
 // Apellidos comunes en Colombia
@@ -32,54 +34,35 @@ const std::vector<std::string> ciudadesColombia = {
     "Manizales", "Pasto", "Neiva", "Villavicencio", "Armenia", "Sincelejo", "Valledupar", "Montería", "Popayán", "Tunja"
 };
 
-/**
- * Implementación de generarFechaNacimiento.
- * 
- * POR QUÉ: Simular fechas de nacimiento realistas.
- * CÓMO: Día (1-28), mes (1-12), año (1960-2009).
- * PARA QUÉ: Atributo fechaNacimiento de Persona.
- */
+// Implementación de funciones generadoras
+
 std::string generarFechaNacimiento() {
-    int dia = 1 + rand() % 28;       // Día: 1 a 28 (evita problemas con meses)
-    int mes = 1 + rand() % 12;        // Mes: 1 a 12
-    int anio = 1960 + rand() % 50;    // Año: 1960 a 2009
+    // Genera día aleatorio (1-28 para simplificar)
+    int dia = 1 + rand() % 28;
+    // Mes aleatorio (1-12)
+    int mes = 1 + rand() % 12;
+    // Año entre 1960-2010
+    int anio = 1960 + rand() % 50;
+    
+    // Convierte a string en formato DD/MM/AAAA
     return std::to_string(dia) + "/" + std::to_string(mes) + "/" + std::to_string(anio);
 }
 
-/**
- * Implementación de generarID.
- * 
- * POR QUÉ: Generar identificadores únicos y secuenciales.
- * CÓMO: Contador estático que inicia en 1000000000 y se incrementa.
- * PARA QUÉ: Simular números de cédula.
- */
 std::string generarID() {
-    static long contador = 1000000000; // Inicia en 1,000,000,000
-    return std::to_string(contador++); // Convierte a string e incrementa
+    static long contador = 1000000000; // ID inicial
+    return std::to_string(contador++); // Incrementa después de usar
 }
 
-/**
- * Implementación de randomDouble.
- * 
- * POR QUÉ: Generar números decimales aleatorios en un rango.
- * CÓMO: Mersenne Twister (mejor que rand()) y distribución uniforme.
- * PARA QUÉ: Valores de ingresos, patrimonio, etc.
- */
 double randomDouble(double min, double max) {
-    static std::mt19937 generator(time(nullptr)); // Semilla basada en tiempo
+    // Generador moderno Mersenne Twister
+    static std::mt19937 generator(time(nullptr));
+    // Distribución uniforme en rango [min, max]
     std::uniform_real_distribution<double> distribution(min, max);
     return distribution(generator);
 }
 
-/**
- * Implementación de generarPersona.
- * 
- * POR QUÉ: Crear una persona con datos aleatorios.
- * CÓMO: Seleccionando aleatoriamente de las bases de datos y generando números.
- * PARA QUÉ: Generar datos de prueba.
- */
 Persona generarPersona() {
-    // Decide si es hombre o mujer
+    // Decide aleatoriamente si es hombre o mujer
     bool esHombre = rand() % 2;
     
     // Selecciona nombre según género
@@ -87,36 +70,37 @@ Persona generarPersona() {
         nombresMasculinos[rand() % nombresMasculinos.size()] :
         nombresFemeninos[rand() % nombresFemeninos.size()];
     
-    // Construye apellido compuesto (dos apellidos aleatorios)
-    std::string apellido = apellidos[rand() % apellidos.size()];
-    apellido += " ";
-    apellido += apellidos[rand() % apellidos.size()];
+    // Combina dos apellidos aleatorios
+    std::string apellido = apellidos[rand() % apellidos.size()] + " " + 
+                           apellidos[rand() % apellidos.size()];
     
-    // Genera los demás atributos
+    // Genera identificadores únicos
     std::string id = generarID();
+    // Ciudad aleatoria de Colombia
     std::string ciudad = ciudadesColombia[rand() % ciudadesColombia.size()];
+    // Fecha aleatoria
     std::string fecha = generarFechaNacimiento();
     
-    // Genera datos financieros realistas
-    double ingresos = randomDouble(10000000, 500000000);   // 10M a 500M COP
-    double patrimonio = randomDouble(0, 2000000000);       // 0 a 2,000M COP
-    double deudas = randomDouble(0, patrimonio * 0.7);     // Deudas hasta el 70% del patrimonio
-    bool declarante = (ingresos > 50000000) && (rand() % 100 > 30); // Probabilidad 70% si ingresos > 50M
+    // --- Generación de datos económicos realistas ---
+    // Ingresos entre 10 millones y 500 millones COP
+    double ingresos = randomDouble(10000000, 500000000);
+    // Patrimonio entre 0 y 2 mil millones COP
+    double patrimonio = randomDouble(0, 2000000000);
+    // Deudas hasta el 70% del patrimonio
+    double deudas = randomDouble(0, patrimonio * 0.7);
+    // 70% probabilidad de ser declarante si gana > 50 millones
+    bool declarante = (ingresos > 50000000) && (rand() % 100 > 30);
     
+    // Construye y retorna objeto Persona
     return Persona(nombre, apellido, id, ciudad, fecha, ingresos, patrimonio, deudas, declarante);
 }
 
-/**
- * Implementación de generarColeccion.
- * 
- * POR QUÉ: Generar un conjunto de n personas.
- * CÓMO: Reservando espacio y agregando n personas generadas.
- * PARA QUÉ: Crear datasets para pruebas.
- */
 std::vector<Persona> generarColeccion(int n) {
     std::vector<Persona> personas;
-    personas.reserve(n); // Reserva espacio para n personas (eficiencia)
+    // Reserva espacio para n personas (optimización)
+    personas.reserve(n);
     
+    // Genera n personas y las añade al vector
     for (int i = 0; i < n; ++i) {
         personas.push_back(generarPersona());
     }
@@ -124,21 +108,12 @@ std::vector<Persona> generarColeccion(int n) {
     return personas;
 }
 
-/**
- * Implementación de buscarPorID.
- * 
- * POR QUÉ: Encontrar una persona por su ID en una colección.
- * CÓMO: Usando un algoritmo de búsqueda secuencial (lineal).
- * PARA QUÉ: Para operaciones de búsqueda en la aplicación.
- */
 const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id) {
-    // Usa find_if con una lambda para buscar por ID
-    auto it = std::find_if(personas.begin(), personas.end(),
-        [&id](const Persona& p) { return p.getId() == id; });
-    
-    if (it != personas.end()) {
-        return &(*it); // Devuelve puntero a la persona encontrada
-    } else {
-        return nullptr; // No encontrado
+    // Búsqueda lineal por ID (solución simple para colecciones medianas)
+    for (const auto& persona : personas) {
+        if (persona.getId() == id) {
+            return &persona; // Retorna dirección si encuentra coincidencia
+        }
     }
+    return nullptr; // Retorna nulo si no encuentra
 }
