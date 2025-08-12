@@ -1,7 +1,7 @@
 #ifndef GENERADOR_H
 #define GENERADOR_H
 
-#include "persona.h"
+#include "Persona.h"
 #include <vector>
 
 // --- Funciones para generación de datos aleatorios ---
