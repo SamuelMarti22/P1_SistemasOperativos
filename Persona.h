@@ -3,36 +3,43 @@
 
 #include <string>
 
+// Clase que representa una persona con datos personales y fiscales
 class Persona {
 private:
-
-    std::string nombre;           
-    std::string apellido;         
-    std::string id;
-    std::string fechaNacimiento;                 
-    std::string ciudad; 
-    double ingresosAnuales;       
-    double patrimonio;            
-    double deudas;               
-    bool declaranteRenta;         
+    // Datos básicos de identificación
+    std::string nombre;           // Nombre de pila
+    std::string apellido;         // Apellidos
+    std::string id;               // Identificador único
+    std::string ciudadNacimiento; // Ciudad de nacimiento en Colombia
+    std::string fechaNacimiento;  // Fecha en formato DD/MM/AAAA
+    
+    // Datos fiscales y económicos
+    double ingresosAnuales;       // Ingresos anuales en pesos colombianos
+    double patrimonio;            // Valor total de bienes y activos
+    double deudas;                // Deudas pendientes
+    bool declaranteRenta;         // Si está obligado a declarar renta
 
 public:
-    PersonaRef(const std::string& nombre, const std::string& apellido, const std::string& id,
-        const std::string& fechaNacimiento, const std::string& ciudad,
-        double ingresosAnuales, double patrimonio, double deudas, bool declaranteRenta);
+    // Constructor: Inicializa todos los campos de la persona
+    Persona(std::string nom, std::string ape, std::string id, 
+            std::string ciudad, std::string fecha, double ingresos, 
+            double patri, double deud, bool declara);
 
+    // --- Métodos de acceso (getters) ---
+    // Permiten obtener valores de campos privados sin exponer implementación
     std::string getNombre() const;
     std::string getApellido() const;
     std::string getId() const;
+    std::string getCiudadNacimiento() const;
     std::string getFechaNacimiento() const;
-    std::string getCiudad() const;
     double getIngresosAnuales() const;
     double getPatrimonio() const;
     double getDeudas() const;
     bool getDeclaranteRenta() const;
 
-    void mostrar() const;         
-    void mostrarResumen() const;  
+    // --- Métodos de visualización ---
+    void mostrar() const;         // Muestra todos los detalles completos
+    void mostrarResumen() const;  // Muestra versión compacta para listados
 };
 
-#endif 
+#endif // PERSONA_H
