@@ -64,5 +64,20 @@ std::vector<Persona> generarColeccion(int n);
  */
 const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id);
 
+/**
+ * Busca la persona con mayor patrimonio en todo el país.
+ */
+const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas);
+
+/**
+ * Obtiene un listado con la persona de mayor patrimonio en cada ciudad.
+ */
+std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas);
+
+/**
+ * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
+ */
+std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas);
+
 void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador);
 #endif // GENERADOR_H

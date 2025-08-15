@@ -176,9 +176,73 @@ int main() {
                 break;
 
             case 6: // Persona con Mayor patrimonio
-                std::cout << "\n1. Filtrar por país ";
-                std::cout << "\n2. Filtrar por ciudad";
+                if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+
+                std::cout << "\n1. Mayor patrimonio en todo el país";
+                std::cout << "\n2. Mayor patrimonio por ciudad";
+                std::cout << "\n3. Mayor patrimonio por grupo de declaración";
+                std::cout << "\nSeleccione una opción: ";
                 std::cin >> filtradoPersonaPatrimonio;
+
+                switch (filtradoPersonaPatrimonio) {
+                    case 1: { // Mayor patrimonio en Colombia
+                        monitor.iniciar_tiempo();
+                        memoria_inicio = monitor.obtener_memoria();
+
+                        if (const Persona* p = buscarMayorPatrimonio(*personas)) {
+                            std::cout << "\n=== Persona con mayor patrimonio en Colombia ===\n";
+                            p->mostrar();
+                        }
+
+                        double tiempo_busqueda = monitor.detener_tiempo();
+                        long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                        monitor.mostrar_estadistica("Mayor patrimonio en Colombia", tiempo_busqueda, memoria_busqueda);
+                        monitor.registrar("Mayor patrimonio en Colombia", tiempo_busqueda, memoria_busqueda);
+                        break;
+                    }
+
+                    case 2: { // Mayor patrimonio por ciudad
+                        monitor.iniciar_tiempo();
+                        memoria_inicio = monitor.obtener_memoria();
+
+                        auto lista = buscarMayoresPorCiudad(*personas);
+                        std::cout << "\n=== Personas con mayor patrimonio por ciudad ===\n";
+                        for (const auto* p : lista) {
+                            p->mostrarResumen();
+                            std::cout << "\n";
+                        }
+
+                        double tiempo_busqueda = monitor.detener_tiempo();
+                        long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                        monitor.mostrar_estadistica("Mayor patrimonio por ciudad", tiempo_busqueda, memoria_busqueda);
+                        monitor.registrar("Mayor patrimonio por ciudad", tiempo_busqueda, memoria_busqueda);
+                        break;
+                    }
+
+                    case 3: { // Mayor patrimonio por grupo de declaración
+                        monitor.iniciar_tiempo();
+                        memoria_inicio = monitor.obtener_memoria();
+
+                        auto lista = buscarMayoresPorGrupo(*personas);
+                        std::cout << "\n=== Personas con mayor patrimonio por grupo de declaración ===\n";
+                        for (const auto* p : lista) {
+                            p->mostrarResumen();
+                            std::cout << "\n";
+                        }
+
+                        double tiempo_busqueda = monitor.detener_tiempo();
+                        long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                        monitor.mostrar_estadistica("Mayor patrimonio por grupo", tiempo_busqueda, memoria_busqueda);
+                        monitor.registrar("Mayor patrimonio por grupo", tiempo_busqueda, memoria_busqueda);
+                        break;
+                    }
+
+                    default:
+                        std::cout << "Opción inválida!\n";
+                }
                 break;
             
             case 7: // Listar y contar personas por calendario

@@ -4,6 +4,7 @@
 #include <random>    // std::mt19937, std::uniform_real_distribution
 #include <vector>
 #include <algorithm> // std::find_if
+#include <unordered_map> // std::unordered_map
 
 // Bases de datos para generación realista
 
@@ -155,6 +156,106 @@ const Persona* buscarPorID(const std::vector<Persona>& personas, const std::stri
     } else {
         return nullptr;  // Si no se encuentra, devuelve nullptr
     }
+}
+
+/**
+ * Implementación de buscarMayorPatrimonio.
+ * 
+ * POR QUÉ: Determinar la persona con mayor patrimonio en Colombia.
+ * CÓMO: Implementando una búsqueda lineal usando std::max_element con una lambda
+ *       que compara el patrimonio de dos personas.
+ * PARA QUÉ: Obtener información de la persona con mayor patrimonio en el país
+ *           para su posterior visualización o procesamiento.
+ */
+const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
+    // Si no hay personas en la colección, no hay máximo que buscar
+    if (personas.empty()) return nullptr;
+
+    // std::max_element recorre el rango y devuelve un iterador al elemento máximo
+    // La lambda compara dos Personas devolviendo true si 'a' tiene patrimonio menor que 'b'
+    auto it = std::max_element(personas.begin(), personas.end(),
+        [](const Persona& a, const Persona& b) {
+            return a.getPatrimonio() < b.getPatrimonio();
+        });
+
+    // Retornamos un puntero a la Persona con mayor patrimonio
+    return &(*it);
+}
+
+/**
+ * Obtiene una lista con las personas que tienen el mayor patrimonio en cada ciudad.
+ * 
+ * POR QUÉ: Encontrar a la persona con mayor patrimonio en cada ciudad de Colombia.
+ * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
+ *       mayor patrimonio encontrada hasta el momento.
+ * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por ciudad.
+ * 
+ * @param personas   Vector con todas las personas.
+ * @return           Vector de punteros a las personas con mayor patrimonio en cada ciudad.
+ */
+std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas) {
+    std::unordered_map<std::string, const Persona*> mayoresPorCiudad;
+    mayoresPorCiudad.reserve(personas.size()); // Evita rehashes innecesarios
+
+    // Recorremos todas las personas
+    for (const auto& p : personas) {
+        const std::string& ciudad = p.getCiudadNacimiento(); // referencia para evitar copia
+
+        auto it = mayoresPorCiudad.find(ciudad);
+        if (it == mayoresPorCiudad.end() || p.getPatrimonio() > it->second->getPatrimonio()) {
+            mayoresPorCiudad[ciudad] = &p;
+        }
+    }
+
+    // Convertimos el mapa en un vector (versión compatible con C++14, sin structured bindings)
+    std::vector<const Persona*> resultado;
+    resultado.reserve(mayoresPorCiudad.size());
+
+    for (const auto& par : mayoresPorCiudad) {
+        const std::string& ciudad = par.first;
+        const Persona* persona = par.second;
+        resultado.push_back(persona);
+    }
+
+    return resultado;
+}
+
+/**
+ * Obtiene una lista con las personas que tienen el mayor patrimonio por grupo de declaración.
+ * 
+ * POR QUÉ: Encontrar a la persona con mayor patrimonio en cada grupo de declaración.
+ * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
+ *       mayor patrimonio encontrada hasta el momento.
+ * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por grupo.
+ * 
+ * @param personas   Vector con todas las personas.
+ * @return           Vector de punteros a las personas con mayor patrimonio en cada grupo.
+ */
+std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas) {
+    std::unordered_map<char, const Persona*> mayoresPorGrupo;
+    mayoresPorGrupo.reserve(personas.size()); // Evita rehashes innecesarios
+
+    // Recorremos todas las personas
+    for (const auto& p : personas) {
+        char grupo = p.getGrupoDeclaracion();
+
+        auto it = mayoresPorGrupo.find(grupo);
+        if (it == mayoresPorGrupo.end() || p.getPatrimonio() > it->second->getPatrimonio()) {
+            mayoresPorGrupo[grupo] = &p;
+        }
+    }
+
+    // Convertimos el mapa en un vector (versión compatible con C++14)
+    std::vector<const Persona*> resultado;
+    resultado.reserve(mayoresPorGrupo.size());
+
+    for (const auto& par : mayoresPorGrupo) {
+        char grupo = par.first;
+        const Persona* persona = par.second;
+        resultado.push_back(persona);
+    }
+
+    return resultado;
 }
 
 void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador) {
