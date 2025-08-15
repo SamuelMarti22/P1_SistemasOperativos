@@ -50,6 +50,10 @@ int main() {
         size_t tam = 0;
         int indice;
         std::string idBusqueda;
+        int filtradoPersonaLongeva;
+        int filtradoPersonaPatrimonio;
+        int listadoGrupos;
+        std::string ciudadPersona;
         
         // Iniciar medición de tiempo y memoria para la operación actual
         monitor.iniciar_tiempo();
@@ -156,11 +160,34 @@ int main() {
                 monitor.mostrar_resumen();
                 break;
                 
-            case 5: // Exportar estadísticas a CSV
-                monitor.exportar_csv();
+            case 5: // Persona más longeva
+                std::cout << "\n1. Filtrar por país";
+                std::cout << "\n2. Filtrar por ciudad";
+                std::cin >> filtradoPersonaLongeva;
+                break;
+
+            case 6: // Persona con Mayor patrimonio
+                std::cout << "\n1. Filtrar por país ";
+                std::cout << "\n2. Filtrar por ciudad";
+                std::cin >> filtradoPersonaPatrimonio;
+                break;
+            
+            case 7: // Listar y contar personas por calendario
+                std::cout << "\n1. Listar y contar por calendario especifico (Grupo A,B o C) ";
+                std::cout << "\n2. Listar y contar en todos los calendarios (Grupo A,B y C) ";
+                std::cout << "\n3. Validar Grupo al que pertenece";
+                std::cin >> listadoGrupos;
+                break;
+
+            case 8: // Grupo con más personas de una ciudad
+                std::cout << "\nIngresa ciudad para buscar";
+                std::cin >> ciudadPersona;
+                break;
+
+            case 9: // Grupo con más personas de cada ciudad
                 break;
                 
-            case 6: // Salir
+            case 10: // 3 ciudades con patrimonio promedio más alto
                 std::cout << "Saliendo...\n";
                 break;
                 
