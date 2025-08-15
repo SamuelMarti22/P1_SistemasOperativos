@@ -259,7 +259,7 @@ std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& pe
 }
 
 /**
- * Implementación de buscarPersonaMasLongevaConCondicion.
+ * Implementación de buscarPersonaMasLongevaConCondicion
  * 
  * POR QUÉ: Encontrar la persona más longeva (con la fecha de nacimiento más antigua) en una colección de personas.
  * CÓMO: Recorriendo el vector de personas y comparando fechas de nacimiento; si se encuentra la fecha más antigua posible, termina la búsqueda anticipadamente.
