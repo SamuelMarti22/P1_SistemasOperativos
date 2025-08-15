@@ -258,6 +258,68 @@ std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& pe
     return resultado;
 }
 
+/**
+ * Implementación de buscarPersonaMasLongevaConCondicion.
+ * 
+ * POR QUÉ: Encontrar la persona más longeva (con la fecha de nacimiento más antigua) en una colección de personas.
+ * CÓMO: Recorriendo el vector de personas y comparando fechas de nacimiento; si se encuentra la fecha más antigua posible, termina la búsqueda anticipadamente.
+ * PARA QUÉ: Para obtener rápidamente la persona más longeva en el país, optimizando el tiempo si aparece la fecha mínima.
+ */
+const Persona* buscarPersonaMasLongevaConCondicion(const std::vector<Persona>& personas) { //toma el vector de Persona como input
+    if (personas.empty()) return nullptr;
+
+    const std::string fechaObjetivo = "1/1/1960";  //fecha mas antigua posible
+    const Persona* masLongeva = &personas[0];  //inicialización de puntero con primera Persona
+    std::string fechaMasLongeva = masLongeva->getFechaNacimiento();   
+
+    for (size_t i = 1; i < personas.size(); ++i) {  //recorrido del vector desde la seguna Persona
+        const std::string fechaActual = personas[i].getFechaNacimiento();
+        if (fechaActual < fechaMasLongeva) {   
+            masLongeva = &personas[i];  //actualiza puntero despues de comparación
+            fechaMasLongeva = masLongeva->getFechaNacimiento();
+            if (fechaMasLongeva == fechaObjetivo) {
+                break; // Ya encontramos la más longeva posible
+            }
+        }
+    }
+    return masLongeva;   //puntero a la mas longeva
+}
+
+
+/**
+ * Implementación de mostrarPersonasMasLongevaPorCiudad_Vector.
+ * 
+ * POR QUÉ: Mostrar la persona más longeva de cada ciudad en una colección de personas.
+ * CÓMO: Recorriendo el vector de personas, agrupando por ciudad y comparando fechas de nacimiento para cada grupo.
+ * PARA QUÉ: Para visualizar, por ciudad, quién es la persona más longeva, útil para estadísticas y reportes por región.
+ */
+void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>& personas) { //recibe referencia
+    std::vector<std::pair<std::string, const Persona*>> resultado; //lista dinamica de pares (ciudad, persona*) 
+
+    for (const auto& persona : personas) {  
+        std::string ciudad = persona.getCiudadNacimiento();
+        auto iter = std::find_if(resultado.begin(), resultado.end(), //observa si ya hay un par con esa ciudad
+            [&ciudad](const std::pair<std::string, const Persona*>& par) {  //compara el  par guardado con ciudad (de la iteración)
+                return par.first == ciudad;
+            });
+        if (iter == resultado.end()) { //si no está la ciudad, se agrega
+            resultado.push_back({ciudad, &persona});
+        } else {  //si ya está,compara fechas con la persona(second) y actualiza si es necesario
+            if (persona.getFechaNacimiento() < iter->second->getFechaNacimiento()) {
+                iter->second = &persona;
+            }
+        }
+    }
+
+    std::cout << "\n=== Persona más longeva por ciudad ===\n";
+    for (const auto& par : resultado) {
+        std::cout << "- " << par.first << ": "
+                  << par.second->getNombre() << " "
+                  << par.second->getApellido() << " ("
+                  << par.second->getFechaNacimiento() << ")\n";
+    }
+}
+
 void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador) {
     // Recorremos todas las personas y contamos las que cumplen con la condición
     std::cout << "Persona del grupo " << grupoDeclaracion << " encontradas:"<<std::endl;

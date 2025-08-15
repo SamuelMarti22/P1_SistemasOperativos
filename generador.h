@@ -74,10 +74,26 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas);
  */
 std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas);
 
+
 /**
  * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
  */
 std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas);
 
 void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador);
+
+/**
+ * Obtiene un listado con la persona más longeva de todo el país.
+ */
+const Persona* buscarPersonaMasLongevaConCondicion(const std::vector<Persona>& personas);   //toma del vector personas las referencias a su direccion de memoria
+
+/**
+ * Obtiene la persona mas longeva de cada ciudad
+ */
+void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>& personas);
+
+
 #endif // GENERADOR_H
+
+
+

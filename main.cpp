@@ -170,9 +170,50 @@ int main() {
                 break;
                 
             case 5: // Persona más longeva
-                std::cout << "\n1. Filtrar por país";
-                std::cout << "\n2. Filtrar por ciudad";
+                 if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+
+                std::cout << "\n1. Persona mas longeva  por país";
+                std::cout << "\n2. Persona mas longeva por cada ciudad";
+                std::cout << "\nSeleccione una opción: ";
                 std::cin >> filtradoPersonaLongeva;
+
+                switch (filtradoPersonaLongeva) {
+                    case 1: { // Persona mas longeva por país
+                        monitor.iniciar_tiempo();
+                        memoria_inicio = monitor.obtener_memoria();
+
+                        if (const Persona* p = buscarPersonaMasLongevaConCondicion(*personas)) {
+                            std::cout << "\n=== Persona más longeva en Colombia ===\n";
+                            p->mostrar();
+                        }
+
+                        double tiempo_busqueda = monitor.detener_tiempo();
+                        long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                        monitor.mostrar_estadistica("Persona más longeva en Colombia", tiempo_busqueda, memoria_busqueda);
+                        monitor.registrar("Persona más longeva en Colombia", tiempo_busqueda, memoria_busqueda);
+                        break;
+                    }
+
+                    case 2: { // Persona mas longeva por ciudad
+                        monitor.iniciar_tiempo();
+                        memoria_inicio = monitor.obtener_memoria();
+
+                        mostrarPersonasMasLongevaPorCiudad_Vector(*personas);
+
+                        double tiempo_busqueda = monitor.detener_tiempo();
+                        long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                        monitor.mostrar_estadistica("Persona más longeva por ciudad", tiempo_busqueda, memoria_busqueda);
+                        monitor.registrar("Persona más longeva por ciudad", tiempo_busqueda, memoria_busqueda);
+                        break;
+                    }
+
+                    default:
+                        std::cout << "Opción no válida.\n";
+                        break;
+                }
                 break;
 
             case 6: // Persona con Mayor patrimonio
