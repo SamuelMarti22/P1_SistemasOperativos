@@ -71,10 +71,14 @@ double randomDouble(double min, double max) {
     return distribution(generator);
 }
 
-char grupoRenta(int id){
-    if (id<40){ return 'A';}
-    if (id>39 && id <80) {return 'B';}
-    if (id>79 && id<100) {return 'C';};
+char grupoRenta(int id, bool declarante){
+    if (declarante){
+        if (id<40){ return 'A';}
+        if (id>39 && id <80) {return 'B';}
+        if (id>79 && id<100) {return 'C';}}
+    else{
+        return 'N';
+    }
 }
 /**
  * Implementación de generarPersona.
@@ -99,7 +103,6 @@ Persona generarPersona() {
     
     // Genera los demás atributos
     long id = generarID();
-    char grupoDeclaracion = grupoRenta(id%100);
 
     std::string ciudad = ciudadesColombia[rand() % ciudadesColombia.size()];
     std::string fecha = generarFechaNacimiento();
@@ -109,6 +112,7 @@ Persona generarPersona() {
     double patrimonio = randomDouble(0, 2000000000);       // 0 a 2,000M COP
     double deudas = randomDouble(0, patrimonio * 0.7);     // Deudas hasta el 70% del patrimonio
     bool declarante = (ingresos > 50000000) && (rand() % 100 > 30); // Probabilidad 70% si ingresos > 50M
+    char grupoDeclaracion = grupoRenta(id%100, declarante);
     
     return Persona(nombre, apellido, std::to_string(id), ciudad, fecha, ingresos, patrimonio, deudas, declarante, grupoDeclaracion);
 }
@@ -150,5 +154,16 @@ const Persona* buscarPorID(const std::vector<Persona>& personas, const std::stri
         return &(*it);  // Retorna un puntero a la persona encontrada
     } else {
         return nullptr;  // Si no se encuentra, devuelve nullptr
+    }
+}
+
+void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador) {
+    // Recorremos todas las personas y contamos las que cumplen con la condición
+    std::cout << "Persona del grupo " << grupoDeclaracion << " encontradas:"<<std::endl;
+    for (const Persona& p : personas) {
+        if (p.getGrupoDeclaracion() == grupoDeclaracion) {
+            std::cout << p.getId()<<" "<<p.getNombre()<<" "<<p.getPatrimonio() << std::endl;
+            ++contador;  
+        }
     }
 }

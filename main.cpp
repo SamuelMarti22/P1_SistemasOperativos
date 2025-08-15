@@ -22,8 +22,8 @@ void mostrarMenu() {
     std::cout << "\n4. Mostrar estadísticas de rendimiento";
     std::cout << "\n5. Persona más longeva";
     std::cout << "\n6. Persona con mayor patrimonio";
-    std::cout << "\n7. Grupo con más personas de una ciudad";
-    std::cout << "\n8. Listar y contar Grupos";
+    std::cout << "\n7. Listar y contar Grupos";
+    std::cout << "\n8. Grupo con más personas de una ciudad";
     std::cout << "\n9. 3 ciudades con mayor promedio de patrimonio";
     std::cout << "\n10. Salir";
     std::cout << "\nSeleccione una opción: ";
@@ -58,9 +58,10 @@ int main() {
         int filtradoPersonaPatrimonio;
         int listadoGrupos;
         std::string ciudadPersona;
-        std::string calendario;
+        char calendario;
+        int contador = 0;
         
-        long memoria_inicio ;
+        long memoria_inicio = monitor.obtener_memoria(); ;
         
         switch(opcion) {
             case 0: { // Crear nuevo conjunto de datos
@@ -70,7 +71,6 @@ int main() {
                 
                  // Iniciar medición de tiempo y memoria para la operación actual
                 monitor.iniciar_tiempo();
-                memoria_inicio = monitor.obtener_memoria();
                 if (n <= 0) {
                     std::cout << "Error: Debe generar al menos 1 persona\n";
                     break;
@@ -97,7 +97,6 @@ int main() {
                 
             case 1: { // Mostrar resumen de todas las personas
                 monitor.iniciar_tiempo();
-                memoria_inicio = monitor.obtener_memoria();
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -119,7 +118,6 @@ int main() {
                 
             case 2: { // Mostrar detalle por índice
                 monitor.iniciar_tiempo();
-                memoria_inicio = monitor.obtener_memoria();
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -147,7 +145,6 @@ int main() {
                 
             case 3: { // Buscar por ID
                 monitor.iniciar_tiempo();
-                memoria_inicio = monitor.obtener_memoria();
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -192,13 +189,41 @@ int main() {
                 switch(listadoGrupos) {
                     case 1:
                     monitor.iniciar_tiempo();
-                    memoria_inicio = monitor.obtener_memoria();
                         std::cout << "\nIngresar calendario (A-B-C)";
                         std::cin >> calendario;
+                        listarPersonasGrupo(*personas,calendario,contador);
+                        std::cout << "\nA grupo "<< calendario <<"pertenecen"<< contador << "personas"; 
+                        break;
 
-                        if (calendario=="A"){
-                            
+                    case 2:
+                        // monitor.iniciar_tiempo();
+                        listarPersonasGrupo(*personas,'A',contador);
+                        std::cout << "\nA grupo A pertenecen"<< contador << "personas"; 
+                        contador = 0;
+                        listarPersonasGrupo(*personas,'B',contador);
+                        std::cout << "\nA grupo B pertenecen"<< contador << "personas"; 
+                        contador = 0;
+                         listarPersonasGrupo(*personas,'C',contador);
+                        std::cout << "\nA grupo C pertenecen"<< contador << "personas"; 
+
+                        // double tiempo_detalle = monitor.detener_tiempo();
+                        // long memoria_detalle = monitor.obtener_memoria() - memoria_inicio;
+                        // monitor.registrar("Mostrar detalle", tiempo_detalle, memoria_detalle);
+                        break;
+                    case 3: 
+                        // monitor.iniciar_tiempo();
+                        std::cout << "\nIngrese el ID a buscar: ";
+                        std::cin >> idBusqueda;
+                        if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
+                            encontrada->mostrar();
+                        } else {
+                            std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
                         }
+                        
+                        // double tiempo_busqueda = monitor.detener_tiempo();
+                        // long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                        // monitor.registrar("Buscar por ID", tiempo_busqueda, memoria_busqueda);
+                        break;
 
                 }
                 break;
@@ -220,7 +245,7 @@ int main() {
         }
         
         // Mostrar estadísticas de la operación (excepto para opciones 4,5,6)
-        if (opcion >= 0 && opcion <= 3) {
+        if (opcion >= 0 && opcion <= 9) {
             double tiempo = monitor.detener_tiempo();
             long memoria = monitor.obtener_memoria() - memoria_inicio;
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);

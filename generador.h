@@ -64,4 +64,5 @@ std::vector<Persona> generarColeccion(int n);
  */
 const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id);
 
+void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador);
 #endif // GENERADOR_H
