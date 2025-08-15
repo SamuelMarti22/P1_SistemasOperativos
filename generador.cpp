@@ -53,9 +53,9 @@ std::string generarFechaNacimiento() {
  * CÓMO: Contador estático que inicia en 1000000000 y se incrementa.
  * PARA QUÉ: Simular números de cédula.
  */
-std::string generarID() {
+int generarID() {
     static long contador = 1000000000; // Inicia en 1,000,000,000
-    return std::to_string(contador++); // Convierte a string e incrementa
+    return contador++; // Convierte a string e incrementa
 }
 
 /**
@@ -71,6 +71,11 @@ double randomDouble(double min, double max) {
     return distribution(generator);
 }
 
+char grupoRenta(int id){
+    if (id<40){ return 'A';}
+    if (id>39 && id <80) {return 'B';}
+    if (id>79 && id<100) {return 'C';};
+}
 /**
  * Implementación de generarPersona.
  * 
@@ -93,7 +98,9 @@ Persona generarPersona() {
     apellido += apellidos[rand() % apellidos.size()];
     
     // Genera los demás atributos
-    std::string id = generarID();
+    long id = generarID();
+    char grupoDeclaracion = grupoRenta(id%100);
+
     std::string ciudad = ciudadesColombia[rand() % ciudadesColombia.size()];
     std::string fecha = generarFechaNacimiento();
     
@@ -103,7 +110,7 @@ Persona generarPersona() {
     double deudas = randomDouble(0, patrimonio * 0.7);     // Deudas hasta el 70% del patrimonio
     bool declarante = (ingresos > 50000000) && (rand() % 100 > 30); // Probabilidad 70% si ingresos > 50M
     
-    return Persona(nombre, apellido, id, ciudad, fecha, ingresos, patrimonio, deudas, declarante);
+    return Persona(nombre, apellido, std::to_string(id), ciudad, fecha, ingresos, patrimonio, deudas, declarante, grupoDeclaracion);
 }
 
 /**

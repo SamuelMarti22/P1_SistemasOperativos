@@ -20,8 +20,12 @@ void mostrarMenu() {
     std::cout << "\n2. Mostrar detalle completo por índice";
     std::cout << "\n3. Buscar persona por ID";
     std::cout << "\n4. Mostrar estadísticas de rendimiento";
-    std::cout << "\n5. Exportar estadísticas a CSV";
-    std::cout << "\n6. Salir";
+    std::cout << "\n5. Persona más longeva";
+    std::cout << "\n6. Persona con mayor patrimonio";
+    std::cout << "\n7. Grupo con más personas de una ciudad";
+    std::cout << "\n8. Listar y contar Grupos";
+    std::cout << "\n9. 3 ciudades con mayor promedio de patrimonio";
+    std::cout << "\n10. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -54,10 +58,9 @@ int main() {
         int filtradoPersonaPatrimonio;
         int listadoGrupos;
         std::string ciudadPersona;
+        std::string calendario;
         
-        // Iniciar medición de tiempo y memoria para la operación actual
-        monitor.iniciar_tiempo();
-        long memoria_inicio = monitor.obtener_memoria();
+        long memoria_inicio ;
         
         switch(opcion) {
             case 0: { // Crear nuevo conjunto de datos
@@ -65,6 +68,9 @@ int main() {
                 std::cout << "\nIngrese el número de personas a generar: ";
                 std::cin >> n;
                 
+                 // Iniciar medición de tiempo y memoria para la operación actual
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
                 if (n <= 0) {
                     std::cout << "Error: Debe generar al menos 1 persona\n";
                     break;
@@ -90,6 +96,8 @@ int main() {
             }
                 
             case 1: { // Mostrar resumen de todas las personas
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -110,6 +118,8 @@ int main() {
             }
                 
             case 2: { // Mostrar detalle por índice
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -136,6 +146,8 @@ int main() {
             }
                 
             case 3: { // Buscar por ID
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -177,6 +189,18 @@ int main() {
                 std::cout << "\n2. Listar y contar en todos los calendarios (Grupo A,B y C) ";
                 std::cout << "\n3. Validar Grupo al que pertenece";
                 std::cin >> listadoGrupos;
+                switch(listadoGrupos) {
+                    case 1:
+                    monitor.iniciar_tiempo();
+                    memoria_inicio = monitor.obtener_memoria();
+                        std::cout << "\nIngresar calendario (A-B-C)";
+                        std::cin >> calendario;
+
+                        if (calendario=="A"){
+                            
+                        }
+
+                }
                 break;
 
             case 8: // Grupo con más personas de una ciudad
@@ -184,10 +208,10 @@ int main() {
                 std::cin >> ciudadPersona;
                 break;
 
-            case 9: // Grupo con más personas de cada ciudad
+            case 9: // 3 ciudades con patrimonio promedio más alto
                 break;
                 
-            case 10: // 3 ciudades con patrimonio promedio más alto
+            case 10: // Salida
                 std::cout << "Saliendo...\n";
                 break;
                 
@@ -202,7 +226,7 @@ int main() {
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
         }
         
-    } while(opcion != 6);
+    } while(opcion != 10);
     
     return 0;
 }

@@ -22,7 +22,7 @@ std::string generarFechaNacimiento();
  * CÓMO: Usando un contador estático que incrementa en cada llamada.
  * PARA QUÉ: Garantizar unicidad en los IDs.
  */
-std::string generarID();
+int generarID();
 
 /**
  * Genera un número decimal aleatorio en un rango [min, max].

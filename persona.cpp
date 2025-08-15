@@ -10,7 +10,7 @@
  */
 Persona::Persona(std::string nom, std::string ape, std::string id, 
                  std::string ciudad, std::string fecha, double ingresos, 
-                 double patri, double deud, bool declara)
+                 double patri, double deud, bool declara, char grupoDeclaracion)
     : nombre(std::move(nom)), 
       apellido(std::move(ape)), 
       id(std::move(id)), 
@@ -19,7 +19,8 @@ Persona::Persona(std::string nom, std::string ape, std::string id,
       ingresosAnuales(ingresos), 
       patrimonio(patri),
       deudas(deud), 
-      declaranteRenta(declara) {}
+      declaranteRenta(declara) ,
+      grupoDeclaracion(grupoDeclaracion) {}
 
 /**
  * Implementación de mostrar.
@@ -38,6 +39,7 @@ void Persona::mostrar() const {
     std::cout << "   - Patrimonio: $" << patrimonio << "\n";
     std::cout << "   - Deudas: $" << deudas << "\n";
     std::cout << "   - Declarante de renta: " << (declaranteRenta ? "Sí" : "No") << "\n";
+    std::cout << "   - Grupo de declaracion:" << grupoDeclaracion<< "\n";
 }
 
 /**
@@ -50,5 +52,6 @@ void Persona::mostrar() const {
 void Persona::mostrarResumen() const {
     std::cout << "[" << id << "] " << nombre << " " << apellido
               << " | " << ciudadNacimiento 
-              << " | $" << std::fixed << std::setprecision(2) << ingresosAnuales;
+              << " | $" << std::fixed << std::setprecision(2) << ingresosAnuales
+              << " | Grupo" <<grupoDeclaracion;
 }
