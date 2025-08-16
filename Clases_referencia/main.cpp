@@ -25,7 +25,8 @@ void mostrarMenu() {
     std::cout << "\n7. Listar y contar Grupos";
     std::cout << "\n8. Grupo con más personas de una ciudad";
     std::cout << "\n9. 3 ciudades con mayor promedio de patrimonio";
-    std::cout << "\n10. Salir";
+    std::cout << "\n10. Persona con mayor deuda";
+    std::cout << "\n11. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -56,6 +57,7 @@ int main() {
         std::string idBusqueda;
         int filtradoPersonaLongeva;
         int filtradoPersonaPatrimonio;
+        int filtradoPersonaDeuda;
         int listadoGrupos;
         std::string ciudadPersona;
         char calendario;
@@ -346,7 +348,78 @@ int main() {
       calcularPromedioPatrimonio(*personas);
       break;
     }
-    case 10: // Salida
+
+case 10: // Persona con mayor deuda
+    if (!personas || personas->empty()) {
+        std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+        break;
+    }
+
+    std::cout << "\n1. Mayor deuda en todo el país";
+    std::cout << "\n2. Mayor deuda por ciudad";
+    std::cout << "\n3. Mayor deuda por grupo de declaración";
+    std::cout << "\nSeleccione una opción: ";
+    std::cin >> filtradoPersonaDeuda;
+
+    switch (filtradoPersonaDeuda) {
+        case 1: { // Mayor deuda en Colombia
+            monitor.iniciar_tiempo();
+            memoria_inicio = monitor.obtener_memoria();
+
+            if (const Persona* p = buscarMayorDeuda(*personas)) {
+                std::cout << "\n=== Persona con mayor deuda en Colombia ===\n";
+                p->mostrar();
+            }
+
+            double tiempo_busqueda = monitor.detener_tiempo();
+            long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+            monitor.mostrar_estadistica("Mayor deuda en Colombia", tiempo_busqueda, memoria_busqueda);
+            monitor.registrar("Mayor deuda en Colombia", tiempo_busqueda, memoria_busqueda);
+            break;
+        }
+
+        case 2: { // Mayor deuda por ciudad
+            monitor.iniciar_tiempo();
+            memoria_inicio = monitor.obtener_memoria();
+
+            auto lista = buscarMayoresDeudasPorCiudad(*personas);
+            std::cout << "\n=== Personas con mayor deuda por ciudad ===\n";
+            for (const auto* p : lista) {
+                p->mostrarResumen();
+                std::cout << "\n";
+            }
+
+            double tiempo_busqueda = monitor.detener_tiempo();
+            long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+            monitor.mostrar_estadistica("Mayor deuda por ciudad", tiempo_busqueda, memoria_busqueda);
+            monitor.registrar("Mayor deuda por ciudad", tiempo_busqueda, memoria_busqueda);
+            break;
+        }
+
+        case 3: { // Mayor deuda por grupo de declaración
+            monitor.iniciar_tiempo();
+            memoria_inicio = monitor.obtener_memoria();
+
+            auto lista = buscarMayoresDeudasPorGrupo(*personas);
+            std::cout << "\n=== Personas con mayor deuda por grupo de declaración ===\n";
+            for (const auto* p : lista) {
+                p->mostrarResumen();
+                std::cout << "\n";
+            }
+
+            double tiempo_busqueda = monitor.detener_tiempo();
+            long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+            monitor.mostrar_estadistica("Mayor deuda por grupo", tiempo_busqueda, memoria_busqueda);
+            monitor.registrar("Mayor deuda por grupo", tiempo_busqueda, memoria_busqueda);
+            break;
+        }
+
+        default:
+            std::cout << "Opción inválida!\n";
+    }
+    break;
+
+    case 11: // Salida
       std::cout << "Saliendo...\n";
       break;
 
@@ -362,7 +435,7 @@ int main() {
                                   memoria);
     }
 
-  } while (opcion != 10);
+  } while (opcion != 11);
 
   return 0;
 }

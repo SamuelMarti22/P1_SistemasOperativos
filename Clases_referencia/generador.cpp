@@ -500,3 +500,104 @@ void calcularPromedioPatrimonio(const std::vector<Persona> &personas) {
               << std::endl;
   }
 }
+
+/**
+ * Implementación de buscarMayorDeuda.
+ * 
+ * POR QUÉ: Determinar la persona con mayor deuda en la colección de personas.
+ * CÓMO: Implementando una búsqueda lineal usando std::max_element con una lambda
+ *       que compara la deuda de dos personas.
+ * PARA QUÉ: Obtener información de la persona con mayor deuda
+ *           para su posterior visualización o procesamiento.
+ */
+const Persona* buscarMayorDeuda(const std::vector<Persona>& personas) {
+    // Si no hay personas en la colección, no hay máximo que buscar
+    if (personas.empty()) return nullptr;
+
+    // std::max_element recorre el rango y devuelve un iterador al elemento máximo
+    // La lambda compara dos Personas devolviendo true si 'a' tiene deuda menor que 'b'
+    auto it = std::max_element(personas.begin(), personas.end(),
+        [](const Persona& a, const Persona& b) {
+            return a.getDeudas() < b.getDeudas();
+        });
+
+    // Retornamos un puntero a la Persona con mayor deuda
+    return &(*it);
+}
+
+/**
+ * Obtiene una lista con las personas que tienen la mayor deuda en cada ciudad.
+ * 
+ * POR QUÉ: Encontrar a la persona con mayor deuda en cada ciudad de la colección.
+ * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
+ *       mayor deuda encontrada hasta el momento.
+ * PARA QUÉ: Listar y mostrar personas con mayor deuda por ciudad.
+ * 
+ * @param personas   Vector con todas las personas.
+ * @return           Vector de punteros a las personas con mayor deuda en cada ciudad.
+ */
+std::vector<const Persona*> buscarMayoresDeudasPorCiudad(const std::vector<Persona>& personas) {
+    std::unordered_map<std::string, const Persona*> mayoresPorCiudad;
+    mayoresPorCiudad.reserve(personas.size()); // Evita rehashes innecesarios
+
+    // Recorremos todas las personas
+    for (const auto& p : personas) {
+        const std::string& ciudad = p.getCiudadNacimiento(); // referencia para evitar copia
+
+        auto it = mayoresPorCiudad.find(ciudad);
+        // Si no hay registro o la deuda de 'p' es mayor, actualizamos el mapa
+        if (it == mayoresPorCiudad.end() || p.getDeudas() > it->second->getDeudas()) {
+            mayoresPorCiudad[ciudad] = &p;
+        }
+    }
+
+    // Convertimos el mapa en un vector (versión compatible con C++14, sin structured bindings)
+    std::vector<const Persona*> resultado;
+    resultado.reserve(mayoresPorCiudad.size());
+
+    for (const auto& par : mayoresPorCiudad) {
+        const Persona* persona = par.second;
+        resultado.push_back(persona);
+    }
+
+    return resultado;
+}
+
+/**
+ * Obtiene una lista con las personas que tienen la mayor deuda por grupo de declaración.
+ * 
+ * POR QUÉ: Encontrar a la persona con mayor deuda en cada grupo de declaración.
+ * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
+ *       mayor deuda encontrada hasta el momento.
+ * PARA QUÉ: Listar y mostrar personas con mayor deuda por grupo.
+ * 
+ * @param personas   Vector con todas las personas.
+ * @return           Vector de punteros a las personas con mayor deuda en cada grupo.
+ */
+std::vector<const Persona*> buscarMayoresDeudasPorGrupo(const std::vector<Persona>& personas) {
+    std::unordered_map<char, const Persona*> mayoresPorGrupo;
+    mayoresPorGrupo.reserve(personas.size()); // Evita rehashes innecesarios
+
+    // Recorremos todas las personas
+    for (const auto& p : personas) {
+        char grupo = p.getGrupoDeclaracion();
+
+        // Si no hay registro o la deuda de 'p' es mayor, actualizamos el mapa
+        auto it = mayoresPorGrupo.find(grupo);
+        if (it == mayoresPorGrupo.end() || p.getDeudas() > it->second->getDeudas()) {
+            mayoresPorGrupo[grupo] = &p;
+        }
+    }
+
+    // Convertimos el mapa en un vector (versión compatible con C++14)
+    std::vector<const Persona*> resultado;
+    resultado.reserve(mayoresPorGrupo.size());
+
+    for (const auto& par : mayoresPorGrupo) {
+        const Persona* persona = par.second;
+        resultado.push_back(persona);
+    }
+
+    return resultado;
+}
+

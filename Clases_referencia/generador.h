@@ -99,6 +99,22 @@ void calcularGrupoMayorPorCiudad(const std::vector<Persona> &personas);
 //Definición de la función que calcula los promedios de patrimonio por ciudad, y muestra los primeros 3
 void calcularPromedioPatrimonio(const std::vector<Persona> &personas);
 
+/**
+ * Busca la persona con mayor deudas en todo el país.
+ */
+const Persona* buscarMayorDeuda(const std::vector<Persona>& personas);
+
+/**
+ * Obtiene un listado con la persona de mayor deuda en cada ciudad.
+ */
+std::vector<const Persona*> buscarMayoresDeudasPorCiudad(const std::vector<Persona>& personas);
+
+
+/**
+ * Obtiene un listado con la persona de mayor deuda por grupo de declaración.
+ */
+std::vector<const Persona*> buscarMayoresDeudasPorGrupo(const std::vector<Persona>& personas);
+
 #endif // GENERADOR_H
 
 
