@@ -64,4 +64,10 @@ std::vector<Persona> generarColeccion(int n);
  */
 const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id);
 
+//Definición de la función que calcula el grupo con más personas de cada ciudad
+void calcularGrupoMayorPorCiudad(const std::vector<Persona> &personas);
+
+//Definición de la función que calcula los promedios de patrimonio por ciudad, y muestra los primeros 3
+void calcularPromedioPatrimonio(const std::vector<Persona> &personas);
+
 #endif // GENERADOR_H
