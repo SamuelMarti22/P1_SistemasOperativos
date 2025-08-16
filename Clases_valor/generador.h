@@ -60,25 +60,25 @@ std::vector<Persona> generarColeccion(int n);
  * 
  * @param personas Vector de personas donde buscar.
  * @param id ID a buscar.
- * @return Puntero a la persona encontrada o nullptr si no se encuentra.
+ * @return Objeto Persona con el ID buscado, o un objeto Persona vacío si no se encuentra.
  */
-const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id);
+Persona buscarPorID(std::vector<Persona> personas, std::string id);
 
 /**
  * Busca la persona con mayor patrimonio en todo el país.
  */
-const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas);
+Persona buscarMayorPatrimonio(std::vector<Persona> personas);
 
 /**
  * Obtiene un listado con la persona de mayor patrimonio en cada ciudad.
  */
-std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas);
+std::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas);
 
 
 /**
  * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
  */
-std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas);
+std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas);
 
 void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador);
 

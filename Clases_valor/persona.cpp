@@ -8,18 +8,25 @@
  * CÓMO: Usando la lista de inicialización y moviendo los strings para evitar copias.
  * PARA QUÉ: Eficiencia y correcta construcción del objeto.
  */
-Persona::Persona(std::string nom, std::string ape, std::string id, 
-                 std::string ciudad, std::string fecha, double ingresos, 
-                 double patri, double deud, bool declara, char grupoDeclaracion)
-    : nombre(std::move(nom)), 
-      apellido(std::move(ape)), 
-      id(std::move(id)), 
-      ciudadNacimiento(std::move(ciudad)),
-      fechaNacimiento(std::move(fecha)), 
-      ingresosAnuales(ingresos), 
+Persona::Persona(std::string nom,
+                 std::string ape,
+                 std::string id,
+                 std::string ciudad,
+                 std::string fecha,
+                 double ingresos,
+                 double patri,
+                 double deud,
+                 bool declara,
+                 char grupoDeclaracion)
+    : nombre(nom),
+      apellido(ape),
+      id(id),
+      ciudadNacimiento(ciudad),
+      fechaNacimiento(fecha),
+      ingresosAnuales(ingresos),
       patrimonio(patri),
-      deudas(deud), 
-      declaranteRenta(declara) ,
+      deudas(deud),
+      declaranteRenta(declara),
       grupoDeclaracion(grupoDeclaracion) {}
 
 /**

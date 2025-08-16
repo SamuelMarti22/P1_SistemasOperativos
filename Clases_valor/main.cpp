@@ -38,11 +38,8 @@ void mostrarMenu() {
  */
 int main() {
     srand(time(nullptr)); // Semilla para generación aleatoria
-    
-    // Puntero inteligente para gestionar la colección de personas
-    // POR QUÉ: Evitar fugas de memoria y garantizar liberación automática.
-    std::unique_ptr<std::vector<Persona>> personas = nullptr;
-    
+    std::vector<Persona> personas;
+
     Monitor monitor; // Monitor para medir rendimiento
     
     int opcion;
@@ -80,8 +77,8 @@ int main() {
                 auto nuevasPersonas = generarColeccion(n);
                 tam = nuevasPersonas.size();
                 
-                // Mover el conjunto al puntero inteligente (propiedad única)
-                personas = std::make_unique<std::vector<Persona>>(std::move(nuevasPersonas));
+                // Mover el conjunto 
+                personas = std::move(nuevasPersonas);
                 
                 // Medir tiempo y memoria usada
                 double tiempo_gen = monitor.detener_tiempo();
@@ -97,16 +94,16 @@ int main() {
                 
             case 1: { // Mostrar resumen de todas las personas
                 monitor.iniciar_tiempo();
-                if (!personas || personas->empty()) {
+                if (personas.empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
                 }
                 
-                tam = personas->size();
+                tam = personas.size();
                 std::cout << "\n=== RESUMEN DE PERSONAS (" << tam << ") ===\n";
                 for(size_t i = 0; i < tam; ++i) {
                     std::cout << i << ". ";
-                    (*personas)[i].mostrarResumen();
+                    personas[i].mostrarResumen();
                     std::cout << "\n";
                 }
                 
@@ -118,16 +115,16 @@ int main() {
                 
             case 2: { // Mostrar detalle por índice
                 monitor.iniciar_tiempo();
-                if (!personas || personas->empty()) {
+                if (personas.empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
                 }
-                
-                tam = personas->size();
+
+                tam = personas.size();
                 std::cout << "\nIngrese el índice (0-" << tam-1 << "): ";
                 if(std::cin >> indice) {
                     if(indice >= 0 && static_cast<size_t>(indice) < tam) {
-                        (*personas)[indice].mostrar();
+                        personas[indice].mostrar();
                     } else {
                         std::cout << "Índice fuera de rango!\n";
                     }
@@ -145,16 +142,17 @@ int main() {
                 
             case 3: { // Buscar por ID
                 monitor.iniciar_tiempo();
-                if (!personas || personas->empty()) {
+                if (personas.empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
                 }
                 
                 std::cout << "\nIngrese el ID a buscar: ";
                 std::cin >> idBusqueda;
-                
-                if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
-                    encontrada->mostrar();
+
+                Persona encontrada = buscarPorID(personas, idBusqueda);
+                if (encontrada.getId() == idBusqueda) {
+                    encontrada.mostrar();
                 } else {
                     std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
                 }
@@ -170,7 +168,7 @@ int main() {
                 break;
                 
             case 5: // Persona más longeva
-                 if (!personas || personas->empty()) {
+                if (personas.empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
                 }
@@ -217,7 +215,7 @@ int main() {
                 break;
 
             case 6: // Persona con Mayor patrimonio
-                if (!personas || personas->empty()) {
+                if (personas.empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
                 }
@@ -233,10 +231,9 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        if (const Persona* p = buscarMayorPatrimonio(*personas)) {
-                            std::cout << "\n=== Persona con mayor patrimonio en Colombia ===\n";
-                            p->mostrar();
-                        }
+                        Persona p = buscarMayorPatrimonio(personas);
+                        std::cout << "\n=== Persona con mayor patrimonio en Colombia ===\n";
+                        p.mostrar();
 
                         double tiempo_busqueda = monitor.detener_tiempo();
                         long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
@@ -249,10 +246,10 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        auto lista = buscarMayoresPorCiudad(*personas);
+                        std::vector<Persona> lista = buscarMayoresPatrimonioPorCiudad(personas);
                         std::cout << "\n=== Personas con mayor patrimonio por ciudad ===\n";
-                        for (const auto* p : lista) {
-                            p->mostrarResumen();
+                        for (Persona p : lista) { 
+                            p.mostrarResumen();
                             std::cout << "\n";
                         }
 
@@ -267,10 +264,10 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        auto lista = buscarMayoresPorGrupo(*personas);
+                        std::vector<Persona> lista = buscarMayoresPatrimonioPorGrupo(personas);
                         std::cout << "\n=== Personas con mayor patrimonio por grupo de declaración ===\n";
-                        for (const auto* p : lista) {
-                            p->mostrarResumen();
+                        for (Persona p : lista) { 
+                            p.mostrarResumen();
                             std::cout << "\n";
                         }
 

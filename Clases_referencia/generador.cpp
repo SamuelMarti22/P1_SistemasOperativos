@@ -199,7 +199,7 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
  * @param personas   Vector con todas las personas.
  * @return           Vector de punteros a las personas con mayor patrimonio en cada ciudad.
  */
-std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas) {
+std::vector<const Persona*> buscarMayoresPatrimonioPorCiudad(const std::vector<Persona>& personas) {
     std::unordered_map<std::string, const Persona*> mayoresPorCiudad;
     mayoresPorCiudad.reserve(personas.size()); // Evita rehashes innecesarios
 
@@ -237,7 +237,7 @@ std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& p
  * @param personas   Vector con todas las personas.
  * @return           Vector de punteros a las personas con mayor patrimonio en cada grupo.
  */
-std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas) {
+std::vector<const Persona*> buscarMayoresPatrimonioPorGrupo(const std::vector<Persona>& personas) {
     std::unordered_map<char, const Persona*> mayoresPorGrupo;
     mayoresPorGrupo.reserve(personas.size()); // Evita rehashes innecesarios
 

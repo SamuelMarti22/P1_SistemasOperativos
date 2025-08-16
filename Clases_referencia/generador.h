@@ -72,13 +72,13 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas);
 /**
  * Obtiene un listado con la persona de mayor patrimonio en cada ciudad.
  */
-std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas);
+std::vector<const Persona*> buscarMayoresPatrimonioPorCiudad(const std::vector<Persona>& personas);
 
 
 /**
  * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
  */
-std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas);
+std::vector<const Persona*> buscarMayoresPatrimonioPorGrupo(const std::vector<Persona>& personas);
 
 void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador);
 

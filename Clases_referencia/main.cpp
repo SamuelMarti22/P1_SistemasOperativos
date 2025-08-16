@@ -249,7 +249,7 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        auto lista = buscarMayoresPorCiudad(*personas);
+                        auto lista = buscarMayoresPatrimonioPorCiudad(*personas);
                         std::cout << "\n=== Personas con mayor patrimonio por ciudad ===\n";
                         for (const auto* p : lista) {
                             p->mostrarResumen();
@@ -267,7 +267,7 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        auto lista = buscarMayoresPorGrupo(*personas);
+                        auto lista = buscarMayoresPatrimonioPorGrupo(*personas);
                         std::cout << "\n=== Personas con mayor patrimonio por grupo de declaración ===\n";
                         for (const auto* p : lista) {
                             p->mostrarResumen();

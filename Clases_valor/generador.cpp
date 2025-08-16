@@ -149,18 +149,18 @@ std::vector<Persona> generarColeccion(int n) {
  * CÓMO: Usando un algoritmo de búsqueda secuencial (lineal).
  * PARA QUÉ: Para operaciones de búsqueda en la aplicación.
  */
-const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id) {
+Persona buscarPorID(std::vector<Persona> personas, std::string id) {
     // Usamos lower_bound para encontrar la posición del primer elemento no menor que 'id'
     auto it = std::lower_bound(personas.begin(), personas.end(), id, 
-        [](const Persona& p, const std::string& id) {
-            return p.getId() < id;  // Compara por el ID de la persona
+        [](Persona p, std::string id) {
+            return p.getId() < id;  // Compara por el ID de la persona (todo por valor)
         });
 
     // Verificamos si encontramos el elemento exacto
     if (it != personas.end() && it->getId() == id) {
-        return &(*it);  // Retorna un puntero a la persona encontrada
+        return *it;  // Retorna una copia de la persona encontrada
     } else {
-        return nullptr;  // Si no se encuentra, devuelve nullptr
+        return Persona();  // Si no se encuentra, devuelve un objeto Persona vacío
     }
 }
 
@@ -173,19 +173,18 @@ const Persona* buscarPorID(const std::vector<Persona>& personas, const std::stri
  * PARA QUÉ: Obtener información de la persona con mayor patrimonio en el país
  *           para su posterior visualización o procesamiento.
  */
-const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
-    // Si no hay personas en la colección, no hay máximo que buscar
-    if (personas.empty()) return nullptr;
+Persona buscarMayorPatrimonio(std::vector<Persona> personas) {
+    // Si la lista está vacía, devolvemos un objeto Persona vacío
+    if (personas.empty()) return Persona();
 
-    // std::max_element recorre el rango y devuelve un iterador al elemento máximo
-    // La lambda compara dos Personas devolviendo true si 'a' tiene patrimonio menor que 'b'
-    auto it = std::max_element(personas.begin(), personas.end(),
-        [](const Persona& a, const Persona& b) {
+    // Encontramos y copiamos directamente la persona con mayor patrimonio
+    Persona mayor = *std::max_element(personas.begin(), personas.end(),
+        [](Persona a, Persona b) {
             return a.getPatrimonio() < b.getPatrimonio();
         });
 
-    // Retornamos un puntero a la Persona con mayor patrimonio
-    return &(*it);
+    // Devolvemos la persona con mayor patrimonio
+    return mayor;
 }
 
 /**
@@ -197,30 +196,27 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
  * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por ciudad.
  * 
  * @param personas   Vector con todas las personas.
- * @return           Vector de punteros a las personas con mayor patrimonio en cada ciudad.
+ * @return           Vector de personas con mayor patrimonio en cada ciudad.
  */
-std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& personas) {
-    std::unordered_map<std::string, const Persona*> mayoresPorCiudad;
+sstd::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas) {
+    std::unordered_map<std::string, Persona> mayoresPorCiudad;
     mayoresPorCiudad.reserve(personas.size()); // Evita rehashes innecesarios
 
     // Recorremos todas las personas
-    for (const auto& p : personas) {
-        const std::string& ciudad = p.getCiudadNacimiento(); // referencia para evitar copia
+    for (auto p : personas) {  // copia en cada iteración
+        std::string ciudad = p.getCiudadNacimiento(); // copia explícita
 
         auto it = mayoresPorCiudad.find(ciudad);
-        if (it == mayoresPorCiudad.end() || p.getPatrimonio() > it->second->getPatrimonio()) {
-            mayoresPorCiudad[ciudad] = &p;
+        if (it == mayoresPorCiudad.end() || p.getPatrimonio() > it->second.getPatrimonio()) {
+            mayoresPorCiudad[ciudad] = p;  // copia completa
         }
     }
 
-    // Convertimos el mapa en un vector (versión compatible con C++14, sin structured bindings)
-    std::vector<const Persona*> resultado;
+    // Convertimos el mapa en un vector de personas
+    std::vector<Persona> resultado;
     resultado.reserve(mayoresPorCiudad.size());
-
-    for (const auto& par : mayoresPorCiudad) {
-        const std::string& ciudad = par.first;
-        const Persona* persona = par.second;
-        resultado.push_back(persona);
+    for (auto par : mayoresPorCiudad) { // copia del par
+        resultado.push_back(par.second); // copia de la persona
     }
 
     return resultado;
@@ -237,31 +233,30 @@ std::vector<const Persona*> buscarMayoresPorCiudad(const std::vector<Persona>& p
  * @param personas   Vector con todas las personas.
  * @return           Vector de punteros a las personas con mayor patrimonio en cada grupo.
  */
-std::vector<const Persona*> buscarMayoresPorGrupo(const std::vector<Persona>& personas) {
-    std::unordered_map<char, const Persona*> mayoresPorGrupo;
-    mayoresPorGrupo.reserve(personas.size()); // Evita rehashes innecesarios
+std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas) {
+    // Mapa temporal que guarda, por cada grupo, la persona con mayor patrimonio
+    std::unordered_map<char, Persona> mayoresPorGrupo;
+    mayoresPorGrupo.reserve(personas.size()); // evita rehashes innecesarios
 
-    // Recorremos todas las personas
-    for (const auto& p : personas) {
-        char grupo = p.getGrupoDeclaracion();
+    // Recorremos todas las personas (copias)
+    for (auto p : personas) {
+        char grupo = p.getGrupoDeclaracion(); // copia del grupo
 
-        auto it = mayoresPorGrupo.find(grupo);
-        if (it == mayoresPorGrupo.end() || p.getPatrimonio() > it->second->getPatrimonio()) {
-            mayoresPorGrupo[grupo] = &p;
+        // Si el grupo no existe o esta persona tiene más patrimonio, actualizamos
+        if (mayoresPorGrupo.count(grupo) == 0 || p.getPatrimonio() > mayoresPorGrupo[grupo].getPatrimonio()) {
+            mayoresPorGrupo[grupo] = p; // copia completa de Persona
         }
     }
 
-    // Convertimos el mapa en un vector (versión compatible con C++14)
-    std::vector<const Persona*> resultado;
+    // Convertimos el mapa en un vector de personas (todo por valor)
+    std::vector<Persona> resultado;
     resultado.reserve(mayoresPorGrupo.size());
-
-    for (const auto& par : mayoresPorGrupo) {
-        char grupo = par.first;
-        const Persona* persona = par.second;
-        resultado.push_back(persona);
+    for (auto par : mayoresPorGrupo) {      // copia de cada par del mapa
+        Persona persona = par.second;       // copia explícita de Persona
+        resultado.push_back(persona);       // se copia en el vector resultado
     }
 
-    return resultado;
+    return resultado; // se retorna una copia del vector completo
 }
 
 /**
