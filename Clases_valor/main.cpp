@@ -25,7 +25,8 @@ void mostrarMenu() {
     std::cout << "\n7. Listar y contar Grupos";
     std::cout << "\n8. Grupo con más personas de una ciudad";
     std::cout << "\n9. 3 ciudades con mayor promedio de patrimonio";
-    std::cout << "\n10. Salir";
+    std::cout << "\n10. Persona con mayor deuda";
+    std::cout << "\n11. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -57,6 +58,7 @@ int main() {
         std::string ciudadPersona;
         char calendario;
         int contador = 0;
+        int filtradoPersonaDeuda;
         
         long memoria_inicio = monitor.obtener_memoria(); ;
         
@@ -183,9 +185,10 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        if (const Persona* p = buscarPersonaMasLongevaConCondicion(*personas)) {
+                        Persona p = buscarPersonaMasLongevaConCondicion(personas);
+                        if (p.getId() != "") {
                             std::cout << "\n=== Persona más longeva en Colombia ===\n";
-                            p->mostrar();
+                            p.mostrar();
                         }
 
                         double tiempo_busqueda = monitor.detener_tiempo();
@@ -199,7 +202,7 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        mostrarPersonasMasLongevaPorCiudad_Vector(*personas);
+                        mostrarPersonasMasLongevaPorCiudad_Vector(personas);
 
                         double tiempo_busqueda = monitor.detener_tiempo();
                         long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
@@ -232,8 +235,10 @@ int main() {
                         memoria_inicio = monitor.obtener_memoria();
 
                         Persona p = buscarMayorPatrimonio(personas);
-                        std::cout << "\n=== Persona con mayor patrimonio en Colombia ===\n";
-                        p.mostrar();
+                        if (p.getId() != "") {
+                            std::cout << "\n=== Persona con mayor patrimonio en Colombia ===\n";
+                            p.mostrar();
+                        }
 
                         double tiempo_busqueda = monitor.detener_tiempo();
                         long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
@@ -293,19 +298,19 @@ int main() {
                     monitor.iniciar_tiempo();
                         std::cout << "\nIngresar calendario (A-B-C)";
                         std::cin >> calendario;
-                        listarPersonasGrupo(*personas,calendario,contador);
+                        listarPersonasGrupo(personas,calendario,contador);
                         std::cout << "\nA grupo "<< calendario <<"pertenecen"<< contador << "personas"; 
                         break;
 
                     case 2:
                         // monitor.iniciar_tiempo();
-                        listarPersonasGrupo(*personas,'A',contador);
+                        listarPersonasGrupo(personas,'A',contador);
                         std::cout << "\nA grupo A pertenecen"<< contador << "personas"; 
                         contador = 0;
-                        listarPersonasGrupo(*personas,'B',contador);
+                        listarPersonasGrupo(personas,'B',contador);
                         std::cout << "\nA grupo B pertenecen"<< contador << "personas"; 
                         contador = 0;
-                         listarPersonasGrupo(*personas,'C',contador);
+                         listarPersonasGrupo(personas,'C',contador);
                         std::cout << "\nA grupo C pertenecen"<< contador << "personas"; 
 
                         // double tiempo_detalle = monitor.detener_tiempo();
@@ -316,8 +321,9 @@ int main() {
                         // monitor.iniciar_tiempo();
                         std::cout << "\nIngrese el ID a buscar: ";
                         std::cin >> idBusqueda;
-                        if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
-                            encontrada->mostrar();
+                        Persona encontrada = buscarPorID(personas, idBusqueda);
+                        if (encontrada.getId() != "") {
+                            encontrada.mostrar();
                         } else {
                             std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
                         }
@@ -334,16 +340,87 @@ int main() {
     {
       monitor.iniciar_tiempo();
       memoria_inicio = monitor.obtener_memoria();
-      calcularGrupoMayorPorCiudad(*personas);
+      calcularGrupoMayorPorCiudad(personas);
       break;
     }
     case 9: { // 3 ciudades con patrimonio promedio más alto
       monitor.iniciar_tiempo();
       memoria_inicio = monitor.obtener_memoria();
-      calcularPromedioPatrimonio(*personas);
+      calcularPromedioPatrimonio(personas);
       break;
     }
-    case 10: // Salida
+    case 10: // Persona con mayor deuda
+        if (personas.empty()) {
+            std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+            break;
+        }
+
+        std::cout << "\n1. Mayor deuda en todo el país";
+        std::cout << "\n2. Mayor deuda por ciudad";
+        std::cout << "\n3. Mayor deuda por grupo de declaración";
+        std::cout << "\nSeleccione una opción: ";
+        std::cin >> filtradoPersonaDeuda;
+
+        switch (filtradoPersonaDeuda) {
+            case 1: { // Mayor deuda en Colombia
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
+
+                Persona p = buscarMayorDeuda(personas);
+                if (p.getId() != "") {
+                    std::cout << "\n=== Persona con mayor deuda en Colombia ===\n";
+                    p.mostrar();
+                }
+
+                double tiempo_busqueda = monitor.detener_tiempo();
+                long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                monitor.mostrar_estadistica("Mayor deuda en Colombia", tiempo_busqueda, memoria_busqueda);
+                monitor.registrar("Mayor deuda en Colombia", tiempo_busqueda, memoria_busqueda);
+                break;
+            }
+
+            case 2: { // Mayor deuda por ciudad
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
+
+                std::vector<Persona> lista = buscarMayoresDeudasPorCiudad(personas);
+                std::cout << "\n=== Personas con mayor deuda por ciudad ===\n";
+                for (Persona p : lista) {
+                    p.mostrarResumen();
+                    std::cout << "\n";
+                }
+
+                double tiempo_busqueda = monitor.detener_tiempo();
+                long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                monitor.mostrar_estadistica("Mayor deuda por ciudad", tiempo_busqueda, memoria_busqueda);
+                monitor.registrar("Mayor deuda por ciudad", tiempo_busqueda, memoria_busqueda);
+                break;
+            }
+
+            case 3: { // Mayor deuda por grupo de declaración
+                monitor.iniciar_tiempo();
+                memoria_inicio = monitor.obtener_memoria();
+
+                std::vector<Persona> lista = buscarMayoresDeudasPorGrupo(personas);
+                std::cout << "\n=== Personas con mayor deuda por grupo de declaración ===\n";
+                for (Persona p : lista) {
+                    p.mostrarResumen();
+                    std::cout << "\n";
+                }
+
+                double tiempo_busqueda = monitor.detener_tiempo();
+                long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
+                monitor.mostrar_estadistica("Mayor deuda por grupo", tiempo_busqueda, memoria_busqueda);
+                monitor.registrar("Mayor deuda por grupo", tiempo_busqueda, memoria_busqueda);
+                break;
+            }
+
+            default:
+                std::cout << "Opción inválida!\n";
+        }
+        break;
+
+    case 11: // Salida
       std::cout << "Saliendo...\n";
       break;
 
@@ -352,14 +429,14 @@ int main() {
     }
 
     // Mostrar estadísticas de la operación (excepto para opciones 4,5,6)
-    if ((opcion >= 0 && opcion <= 3) || (opcion >= 8 && opcion <= 9)) {
+    if ((opcion >= 0 && opcion <= 3) || (opcion >= 8 && opcion <= 10)) {
       double tiempo = monitor.detener_tiempo();
       long memoria = monitor.obtener_memoria() - memoria_inicio;
       monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo,
                                   memoria);
     }
 
-  } while (opcion != 10);
+  } while (opcion != 11);
 
   return 0;
 }

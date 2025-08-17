@@ -37,7 +37,7 @@ const std::vector<std::string> ciudadesColombia = {
     "Manizales",   "Pasto",      "Neiva",       "Villavicencio", "Armenia",
     "Sincelejo",   "Valledupar", "Montería",    "Popayán",       "Tunja"};
 
-const std::vector<std::string> &ciudadesColombiaRef = ciudadesColombia;
+
 /**
  * Implementación de generarFechaNacimiento.
  *
@@ -82,11 +82,24 @@ char grupoRenta(int id, bool declarante){
     if (declarante){
         if (id<40){ return 'A';}
         if (id>39 && id <80) {return 'B';}
-        if (id>79 && id<100) {return 'C';}}
+        if (id>79 && id<100) {return 'C';}
+        return 'N'; // Caso por defecto para declarantes con id >= 100
+    }
     else{
         return 'N';
     }
 }
+/**
+ * Genera una Persona "vacía" con valores por defecto para representar "no encontrado".
+ * 
+ * POR QUÉ: Necesitamos un objeto Persona válido cuando no se encuentra una persona.
+ * CÓMO: Creando una Persona con valores por defecto que se puedan identificar fácilmente.
+ * PARA QUÉ: Evitar errores de compilación y mantener el enfoque por valor.
+ */
+Persona generarPersonaVacia() {
+    return Persona("", "", "", "", "", 0.0, 0.0, 0.0, false, 'N');
+}
+
 /**
  * Implementación de generarPersona.
  *
@@ -160,7 +173,7 @@ Persona buscarPorID(std::vector<Persona> personas, std::string id) {
     if (it != personas.end() && it->getId() == id) {
         return *it;  // Retorna una copia de la persona encontrada
     } else {
-        return Persona();  // Si no se encuentra, devuelve un objeto Persona vacío
+        return generarPersonaVacia();  // Si no se encuentra, devuelve un objeto Persona vacío
     }
 }
 
@@ -175,7 +188,7 @@ Persona buscarPorID(std::vector<Persona> personas, std::string id) {
  */
 Persona buscarMayorPatrimonio(std::vector<Persona> personas) {
     // Si la lista está vacía, devolvemos un objeto Persona vacío
-    if (personas.empty()) return Persona();
+    if (personas.empty()) return generarPersonaVacia();
 
     // Encontramos y copiamos directamente la persona con mayor patrimonio
     Persona mayor = *std::max_element(personas.begin(), personas.end(),
@@ -198,7 +211,7 @@ Persona buscarMayorPatrimonio(std::vector<Persona> personas) {
  * @param personas   Vector con todas las personas.
  * @return           Vector de personas con mayor patrimonio en cada ciudad.
  */
-sstd::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas) {
+std::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas) {
     std::unordered_map<std::string, Persona> mayoresPorCiudad;
     mayoresPorCiudad.reserve(personas.size()); // Evita rehashes innecesarios
 
@@ -207,8 +220,12 @@ sstd::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> pers
         std::string ciudad = p.getCiudadNacimiento(); // copia explícita
 
         auto it = mayoresPorCiudad.find(ciudad);
-        if (it == mayoresPorCiudad.end() || p.getPatrimonio() > it->second.getPatrimonio()) {
-            mayoresPorCiudad[ciudad] = p;  // copia completa
+        if (it == mayoresPorCiudad.end()) {
+            // Si la ciudad no existe, la insertamos
+            mayoresPorCiudad.insert({ciudad, p});
+        } else if (p.getPatrimonio() > it->second.getPatrimonio()) {
+            // Si existe y tiene más patrimonio, actualizamos
+            it->second = p;  // copia completa
         }
     }
 
@@ -231,7 +248,7 @@ sstd::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> pers
  * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por grupo.
  * 
  * @param personas   Vector con todas las personas.
- * @return           Vector de punteros a las personas con mayor patrimonio en cada grupo.
+ * @return           Vector de personas con mayor patrimonio en cada grupo.
  */
 std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas) {
     // Mapa temporal que guarda, por cada grupo, la persona con mayor patrimonio
@@ -243,8 +260,13 @@ std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> person
         char grupo = p.getGrupoDeclaracion(); // copia del grupo
 
         // Si el grupo no existe o esta persona tiene más patrimonio, actualizamos
-        if (mayoresPorGrupo.count(grupo) == 0 || p.getPatrimonio() > mayoresPorGrupo[grupo].getPatrimonio()) {
-            mayoresPorGrupo[grupo] = p; // copia completa de Persona
+        auto it = mayoresPorGrupo.find(grupo);
+        if (it == mayoresPorGrupo.end()) {
+            // Si el grupo no existe, lo insertamos
+            mayoresPorGrupo.insert({grupo, p});
+        } else if (p.getPatrimonio() > it->second.getPatrimonio()) {
+            // Si existe y tiene más patrimonio, actualizamos
+            it->second = p; // copia completa de Persona
         }
     }
 
@@ -252,8 +274,7 @@ std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> person
     std::vector<Persona> resultado;
     resultado.reserve(mayoresPorGrupo.size());
     for (auto par : mayoresPorGrupo) {      // copia de cada par del mapa
-        Persona persona = par.second;       // copia explícita de Persona
-        resultado.push_back(persona);       // se copia en el vector resultado
+        resultado.push_back(par.second);    // copia de la persona (necesaria)
     }
 
     return resultado; // se retorna una copia del vector completo
@@ -266,24 +287,24 @@ std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> person
  * CÓMO: Recorriendo el vector de personas y comparando fechas de nacimiento; si se encuentra la fecha más antigua posible, termina la búsqueda anticipadamente.
  * PARA QUÉ: Para obtener rápidamente la persona más longeva en el país, optimizando el tiempo si aparece la fecha mínima.
  */
-const Persona* buscarPersonaMasLongevaConCondicion(const std::vector<Persona>& personas) { //toma el vector de Persona como input
-    if (personas.empty()) return nullptr;
+Persona buscarPersonaMasLongevaConCondicion(std::vector<Persona> personas) { //toma el vector de Persona por valor
+    if (personas.empty()) return generarPersonaVacia();
 
     const std::string fechaObjetivo = "1/1/1960";  //fecha mas antigua posible
-    const Persona* masLongeva = &personas[0];  //inicialización de puntero con primera Persona
-    std::string fechaMasLongeva = masLongeva->getFechaNacimiento();   
+    Persona masLongeva = personas[0];  //inicialización con copia de la primera Persona
+    std::string fechaMasLongeva = masLongeva.getFechaNacimiento();   
 
-    for (size_t i = 1; i < personas.size(); ++i) {  //recorrido del vector desde la seguna Persona
+    for (size_t i = 1; i < personas.size(); ++i) {  //recorrido del vector desde la segunda Persona
         const std::string fechaActual = personas[i].getFechaNacimiento();
         if (fechaActual < fechaMasLongeva) {   
-            masLongeva = &personas[i];  //actualiza puntero despues de comparación
-            fechaMasLongeva = masLongeva->getFechaNacimiento();
+            masLongeva = personas[i];  //actualiza con copia de la persona más longeva
+            fechaMasLongeva = masLongeva.getFechaNacimiento();
             if (fechaMasLongeva == fechaObjetivo) {
                 break; // Ya encontramos la más longeva posible
             }
         }
     }
-    return masLongeva;   //puntero a la mas longeva
+    return masLongeva;   //devuelve copia de la persona más longeva
 }
 
 
@@ -294,37 +315,37 @@ const Persona* buscarPersonaMasLongevaConCondicion(const std::vector<Persona>& p
  * CÓMO: Recorriendo el vector de personas, agrupando por ciudad y comparando fechas de nacimiento para cada grupo.
  * PARA QUÉ: Para visualizar, por ciudad, quién es la persona más longeva, útil para estadísticas y reportes por región.
  */
-void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>& personas) { //recibe referencia
-    std::vector<std::pair<std::string, const Persona*>> resultado; //lista dinamica de pares (ciudad, persona*) 
+void mostrarPersonasMasLongevaPorCiudad_Vector(std::vector<Persona> personas) { //recibe por valor
+    std::vector<std::pair<std::string, Persona>> resultado; //lista dinamica de pares (ciudad, persona) por valor
 
-    for (const auto& persona : personas) {  
-        std::string ciudad = persona.getCiudadNacimiento();
+    for (auto persona : personas) {  //copia en cada iteración
+        std::string ciudad = persona.getCiudadNacimiento(); //copia de la ciudad
         auto iter = std::find_if(resultado.begin(), resultado.end(), //observa si ya hay un par con esa ciudad
-            [&ciudad](const std::pair<std::string, const Persona*>& par) {  //compara el  par guardado con ciudad (de la iteración)
+            [ciudad](const std::pair<std::string, Persona> par) {  //compara el par guardado con ciudad (de la iteración)
                 return par.first == ciudad;
             });
         if (iter == resultado.end()) { //si no está la ciudad, se agrega
-            resultado.push_back({ciudad, &persona});
+            resultado.push_back({ciudad, persona}); //copia de la persona
         } else {  //si ya está,compara fechas con la persona(second) y actualiza si es necesario
-            if (persona.getFechaNacimiento() < iter->second->getFechaNacimiento()) {
-                iter->second = &persona;
+            if (persona.getFechaNacimiento() < iter->second.getFechaNacimiento()) {
+                iter->second = persona; //copia de la persona más longeva
             }
         }
     }
 
     std::cout << "\n=== Persona más longeva por ciudad ===\n";
-    for (const auto& par : resultado) {
+    for (auto par : resultado) {  //copia del par para mantener enfoque 100% por valor
         std::cout << "- " << par.first << ": "
-                  << par.second->getNombre() << " "
-                  << par.second->getApellido() << " ("
-                  << par.second->getFechaNacimiento() << ")\n";
+                  << par.second.getNombre() << " "
+                  << par.second.getApellido() << " ("
+                  << par.second.getFechaNacimiento() << ")\n";
     }
 }
 
-void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador) {
+void listarPersonasGrupo(std::vector<Persona> personas, char grupoDeclaracion, int contador) {
     // Recorremos todas las personas y contamos las que cumplen con la condición
     std::cout << "Persona del grupo " << grupoDeclaracion << " encontradas:"<<std::endl;
-    for (const Persona& p : personas) {
+    for (Persona p : personas) {  //copia en cada iteración
         if (p.getGrupoDeclaracion() == grupoDeclaracion) {
             std::cout << p.getId()<<" "<<p.getNombre()<<" "<<p.getPatrimonio() << std::endl;
             ++contador;  
@@ -333,7 +354,7 @@ void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclara
 }
 
 // Función para calcular el grupo más grande por ciudad
-void calcularGrupoMayorPorCiudad(const std::vector<Persona> &personas) {
+void calcularGrupoMayorPorCiudad(std::vector<Persona> personas) {
   // Inicialización de las variables
   int ciudadesGrupos[20][3] = {{0}}; // 20 ciudades, 3 grupos
   std::unordered_map<std::string, int> ciudadIndex = {
@@ -346,9 +367,9 @@ void calcularGrupoMayorPorCiudad(const std::vector<Persona> &personas) {
       {"Popayán", 18},     {"Tunja", 19}};
 
   // Recorremos las personas y sumamos los grupos
-  for (const Persona &persona : personas) {
-    std::string ciudad = persona.getCiudadNacimiento();
-    char grupo = persona.getGrupoDeclaracion();
+  for (Persona persona : personas) {  //copia en cada iteración
+    std::string ciudad = persona.getCiudadNacimiento(); //copia de la ciudad
+    char grupo = persona.getGrupoDeclaracion(); //copia del grupo
 
     int index1 = ciudadIndex[ciudad];
     if (grupo != 'N') {
@@ -441,19 +462,19 @@ void calcularGrupoMayorPorCiudad(const std::vector<Persona> &personas) {
 }
 
 // Función que calcula el promedio de patrimonio por ciudad
-void calcularPromedioPatrimonio(const std::vector<Persona> &personas) {
+void calcularPromedioPatrimonio(std::vector<Persona> personas) {
   double ciudadesPromedios[20] = {0};
   int conteoCiudad[20] = {0};
 
   // Recorremos a cada persona y sumamos el patrimonio por ciudad
-  for (const Persona &persona : personas) {
-    std::string ciudad = persona.getCiudadNacimiento();
-    double patrimonio = persona.getPatrimonio();
+  for (Persona persona : personas) {  //copia en cada iteración
+    std::string ciudad = persona.getCiudadNacimiento(); //copia de la ciudad
+    double patrimonio = persona.getPatrimonio(); //copia del patrimonio
 
     // Buscar el índice de la ciudad
     int index1;
     for (int i = 0; i < 20; i++) {
-      if (ciudadesColombiaRef[i] == ciudad) {
+      if (ciudadesColombia[i] == ciudad) {
         index1 = i;
         break;
       }
@@ -476,7 +497,7 @@ void calcularPromedioPatrimonio(const std::vector<Persona> &personas) {
 
   // Ordenamos por promedio (en orden descendente)
   std::sort(promediosConId.begin(), promediosConId.end(),
-            [](const std::pair<float, int> &a, const std::pair<float, int> &b) {
+            [](std::pair<float, int> a, std::pair<float, int> b) {  //por valor para mantener enfoque 100% por valor
               return a.first >
                      b.first; // Ordenamos por el primer valor (promedio)
             });
@@ -489,9 +510,115 @@ void calcularPromedioPatrimonio(const std::vector<Persona> &personas) {
                    2); // Fija a dos decimales y evita notación científica
   std::cout << std::showpoint; // Asegura que se muestren los ceros decimales
 
-  for (int i = 0; i < 3 && i < promediosConId.size(); ++i) {
+  for (size_t i = 0; i < 3 && i < promediosConId.size(); ++i) {
     int idCiudad = promediosConId[i].second; // Obtenemos el ID de la ciudad
     std::cout << ciudadesColombia[idCiudad] << ": " << promediosConId[i].first
               << std::endl;
   }
+}
+
+/**
+ * Busca la persona con mayor deuda en todo el país.
+ * 
+ * POR QUÉ: Determinar la persona con mayor deuda en la colección de personas.
+ * CÓMO: Implementando una búsqueda lineal usando std::max_element con una lambda
+ *       que compara la deuda de dos personas.
+ * PARA QUÉ: Obtener información de la persona con mayor deuda
+ *           para su posterior visualización o procesamiento.
+ * 
+ * @param personas Vector con todas las personas.
+ * @return Objeto Persona con mayor deuda, o un objeto Persona vacío si la lista está vacía.
+ */
+Persona buscarMayorDeuda(std::vector<Persona> personas) {
+    // Si la lista está vacía, devolvemos un objeto Persona vacío
+    if (personas.empty()) return generarPersonaVacia();
+
+    // Encontramos y copiamos directamente la persona con mayor deuda
+    Persona mayor = *std::max_element(personas.begin(), personas.end(),
+        [](Persona a, Persona b) {
+            return a.getDeudas() < b.getDeudas();
+        });
+
+    // Devolvemos la persona con mayor deuda
+    return mayor;
+}
+
+/**
+ * Obtiene una lista con las personas que tienen la mayor deuda en cada ciudad.
+ * 
+ * POR QUÉ: Encontrar a la persona con mayor deuda en cada ciudad de la colección.
+ * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
+ *       mayor deuda encontrada hasta el momento.
+ * PARA QUÉ: Listar y mostrar personas con mayor deuda por ciudad.
+ * 
+ * @param personas   Vector con todas las personas.
+ * @return           Vector de personas con mayor deuda en cada ciudad.
+ */
+std::vector<Persona> buscarMayoresDeudasPorCiudad(std::vector<Persona> personas) {
+    std::unordered_map<std::string, Persona> mayoresPorCiudad;
+    mayoresPorCiudad.reserve(personas.size()); // Evita rehashes innecesarios
+
+    // Recorremos todas las personas
+    for (auto p : personas) {  // copia en cada iteración
+        std::string ciudad = p.getCiudadNacimiento(); // copia explícita
+
+        auto it = mayoresPorCiudad.find(ciudad);
+        if (it == mayoresPorCiudad.end()) {
+            // Si la ciudad no existe, la insertamos
+            mayoresPorCiudad.insert({ciudad, p});
+        } else if (p.getDeudas() > it->second.getDeudas()) {
+            // Si existe y tiene más deuda, actualizamos
+            it->second = p;  // copia completa
+        }
+    }
+
+    // Convertimos el mapa en un vector de personas
+    std::vector<Persona> resultado;
+    resultado.reserve(mayoresPorCiudad.size());
+    for (auto par : mayoresPorCiudad) { // copia del par para mantener enfoque 100% por valor
+        resultado.push_back(par.second); // copia de la persona (necesaria)
+    }
+
+    return resultado;
+}
+
+/**
+ * Obtiene una lista con las personas que tienen la mayor deuda por grupo de declaración.
+ * 
+ * POR QUÉ: Encontrar a la persona con mayor deuda en cada grupo de declaración.
+ * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
+ *       mayor deuda encontrada hasta el momento.
+ * PARA QUÉ: Listar y mostrar personas con mayor deuda por grupo.
+ * 
+ * @param personas   Vector con todas las personas.
+ * @return           Vector de personas con mayor deuda en cada grupo.
+ */
+std::vector<Persona> buscarMayoresDeudasPorGrupo(std::vector<Persona> personas) {
+    // Mapa temporal que guarda, por cada grupo, la persona con mayor deuda
+    std::unordered_map<char, Persona> mayoresPorGrupo;
+    mayoresPorGrupo.reserve(personas.size()); // evita rehashes innecesarios
+
+    // Recorremos todas las personas (copias)
+    for (auto p : personas) {
+        char grupo = p.getGrupoDeclaracion(); // copia del grupo
+
+        // Si el grupo no existe o esta persona tiene más deuda, actualizamos
+        auto it = mayoresPorGrupo.find(grupo);
+        if (it == mayoresPorGrupo.end()) {
+            // Si el grupo no existe, lo insertamos
+            mayoresPorGrupo.insert({grupo, p});
+        } else if (p.getDeudas() > it->second.getDeudas()) {
+            // Si existe y tiene más deuda, actualizamos
+            it->second = p; // copia completa de Persona
+        }
+    }
+
+    // Convertimos el mapa en un vector de personas (todo por valor)
+    std::vector<Persona> resultado;
+    resultado.reserve(mayoresPorGrupo.size());
+    for (auto par : mayoresPorGrupo) {      // copia del par para mantener enfoque 100% por valor
+        resultado.push_back(par.second);           // copia de la persona (necesaria)
+    }
+
+    return resultado; // se retorna una copia del vector completo
 }
