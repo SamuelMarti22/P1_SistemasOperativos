@@ -62,58 +62,58 @@ std::vector<Persona> generarColeccion(int n);
  * @param id ID a buscar.
  * @return Puntero a la persona encontrada o nullptr si no se encuentra.
  */
-const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id);
+const Persona* buscarPorID(const std::vector<Persona>* personas, const std::string* id);
 
 /**
  * Busca la persona con mayor patrimonio en todo el país.
  */
-const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas);
+const Persona* buscarMayorPatrimonio(const std::vector<Persona>* personas);
 
 /**
  * Obtiene un listado con la persona de mayor patrimonio en cada ciudad.
  */
-void buscarMayoresPatrimonioPorCiudad(const std::vector<Persona>& personas);
+void buscarMayoresPatrimonioPorCiudad(const std::vector<Persona>* personas);
 
 
 /**
  * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
  */
-void buscarMayoresPatrimonioPorGrupo(const std::vector<Persona>& personas);
+void buscarMayoresPatrimonioPorGrupo(const std::vector<Persona>* personas);
 
-void listarPersonasGrupo(const std::vector<Persona>& personas, char grupoDeclaracion, int& contador);
+void listarPersonasGrupo(const std::vector<Persona>* personas, char grupoDeclaracion, int* contador);
 
 /**
  * Obtiene un listado con la persona más longeva de todo el país.
  */
-const Persona* buscarPersonaMasLongevaConCondicion(const std::vector<Persona>& personas);   //toma del vector personas las referencias a su direccion de memoria
+const Persona* buscarPersonaMasLongevaConCondicion(const std::vector<Persona>* personas);   //toma del vector personas las referencias a su direccion de memoria
 
 /**
  * Obtiene la persona mas longeva de cada ciudad
  */
-void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>& personas);
+void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>* personas);
 
 
 //Definición de la función que calcula el grupo con más personas de cada ciudad
-void calcularGrupoMayorPorCiudad(const std::vector<Persona> &personas);
+void calcularGrupoMayorPorCiudad(const std::vector<Persona> *personas);
 
 //Definición de la función que calcula los promedios de patrimonio por ciudad, y muestra los primeros 3
-void calcularPromedioPatrimonio(const std::vector<Persona> &personas);
+void calcularPromedioPatrimonio(const std::vector<Persona> *personas);
 
 /**
  * Busca la persona con mayor deudas en todo el país.
  */
-const Persona* buscarMayorDeuda(const std::vector<Persona>& personas);
+const Persona* buscarMayorDeuda(const std::vector<Persona>* personas);
 
 /**
  * Obtiene un listado con la persona de mayor deuda en cada ciudad.
  */
-void buscarMayoresDeudasPorCiudad(const std::vector<Persona>& personas);
+void buscarMayoresDeudasPorCiudad(const std::vector<Persona>* personas);
 
 
 /**
  * Obtiene un listado con la persona de mayor deuda por grupo de declaración.
  */
-void buscarMayoresDeudasPorGrupo(const std::vector<Persona>& personas);
+void buscarMayoresDeudasPorGrupo(const std::vector<Persona>* personas);
 
 #endif // GENERADOR_H
 
