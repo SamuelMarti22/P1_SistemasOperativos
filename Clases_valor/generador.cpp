@@ -202,15 +202,12 @@ Persona buscarMayorPatrimonio(std::vector<Persona> personas) {
 }
 
 /**
- * Obtiene una lista con las personas que tienen el mayor patrimonio en cada ciudad.
+ * Imprime un listado de las personas con mayor patrimonio en cada ciudad.
  * 
  * POR QUÉ: Encontrar a la persona con mayor patrimonio en cada ciudad de Colombia.
  * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
  *       mayor patrimonio encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por ciudad.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de personas con mayor patrimonio en cada ciudad.
  */
 void  buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas) {
     std::unordered_map<std::string, Persona> mayoresPorCiudad;
@@ -240,15 +237,12 @@ void  buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas) {
 }
 
 /**
- * Obtiene una lista con las personas que tienen el mayor patrimonio por grupo de declaración.
+ * Imprime un listado de las personas con mayor patrimonio por grupo de declaración.
  * 
  * POR QUÉ: Encontrar a la persona con mayor patrimonio en cada grupo de declaración.
  * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
  *       mayor patrimonio encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por grupo.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de personas con mayor patrimonio en cada grupo.
  */
 void buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas) {
     // Mapa temporal que guarda, por cada grupo, la persona con mayor patrimonio
@@ -544,15 +538,12 @@ Persona buscarMayorDeuda(std::vector<Persona> personas) {
 }
 
 /**
- * Obtiene una lista con las personas que tienen la mayor deuda en cada ciudad.
+ * Imprime un listado de las personas con mayor deuda en cada ciudad.
  * 
  * POR QUÉ: Encontrar a la persona con mayor deuda en cada ciudad de la colección.
  * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
  *       mayor deuda encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor deuda por ciudad.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de personas con mayor deuda en cada ciudad.
  */
 void buscarMayoresDeudasPorCiudad(std::vector<Persona> personas) {
     std::unordered_map<std::string, Persona> mayoresPorCiudad;
@@ -582,15 +573,12 @@ void buscarMayoresDeudasPorCiudad(std::vector<Persona> personas) {
 }
 
 /**
- * Obtiene una lista con las personas que tienen la mayor deuda por grupo de declaración.
+ * Imprime un listado de las personas con mayor deuda por grupo de declaración.
  * 
  * POR QUÉ: Encontrar a la persona con mayor deuda en cada grupo de declaración.
  * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
  *       mayor deuda encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor deuda por grupo.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de personas con mayor deuda en cada grupo.
  */
 void buscarMayoresDeudasPorGrupo(std::vector<Persona> personas) {
     // Mapa temporal que guarda, por cada grupo, la persona con mayor deuda

@@ -79,13 +79,13 @@ Persona buscarPorID(std::vector<Persona> personas, std::string id);
 Persona buscarMayorPatrimonio(std::vector<Persona> personas);
 
 /**
- * Obtiene un listado con la persona de mayor patrimonio en cada ciudad.
+ * Imprime un listado con la persona de mayor patrimonio en cada ciudad.
  */
 void buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas);
 
 
 /**
- * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
+ * Imprime un listado con la persona de mayor patrimonio por grupo de declaración.
  */
 void buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas);
 
@@ -95,12 +95,12 @@ void buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas);
 Persona buscarMayorDeuda(std::vector<Persona> personas);
 
 /**
- * Obtiene un listado con la persona de mayor deuda en cada ciudad.
+ * Imprime un listado con la persona de mayor deuda en cada ciudad.
  */
 void buscarMayoresDeudasPorCiudad(std::vector<Persona> personas);
 
 /**
- * Obtiene un listado con la persona de mayor deuda por grupo de declaración.
+ * Imprime un listado con la persona de mayor deuda por grupo de declaración.
  */
 void buscarMayoresDeudasPorGrupo(std::vector<Persona> personas);
 
