@@ -13,8 +13,13 @@ void mostrarMenu() {
     std::cout << "\n2. Mostrar detalle completo por índice";
     std::cout << "\n3. Buscar persona por ID";
     std::cout << "\n4. Mostrar estadísticas de rendimiento";
-    std::cout << "\n5. Exportar estadísticas a CSV";
-    std::cout << "\n6. Salir";
+    std::cout << "\n5. Persona más longeva";
+    std::cout << "\n6. Persona con mayor patrimonio";
+    std::cout << "\n7. Listar y contar Grupos";
+    std::cout << "\n8. Grupo con más personas de una ciudad";
+    std::cout << "\n9. 3 ciudades con mayor promedio de patrimonio";
+    std::cout << "\n10. Persona con mayor deuda";
+    std::cout << "\n11. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
