@@ -19,6 +19,7 @@ struct Persona {
     double patrimonio;            // Valor total de bienes y activos
     double deudas;                // Deudas pendientes
     bool declaranteRenta;         // Si está obligado a declarar renta
+    char grupoDeclaracion;        // Grupo de declaración fiscal (A, B, C)
 
     // --- Métodos de visualización ---
     void mostrar() const;         // Muestra todos los detalles completos
