@@ -251,12 +251,7 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        auto lista = buscarMayoresPatrimonioPorCiudad(*personas);
-                        std::cout << "\n=== Personas con mayor patrimonio por ciudad ===\n";
-                        for (const auto* p : lista) {
-                            p->mostrarResumen();
-                            std::cout << "\n";
-                        }
+                        buscarMayoresPatrimonioPorCiudad(*personas);
 
                         double tiempo_busqueda = monitor.detener_tiempo();
                         long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
@@ -269,12 +264,7 @@ int main() {
                         monitor.iniciar_tiempo();
                         memoria_inicio = monitor.obtener_memoria();
 
-                        auto lista = buscarMayoresPatrimonioPorGrupo(*personas);
-                        std::cout << "\n=== Personas con mayor patrimonio por grupo de declaración ===\n";
-                        for (const auto* p : lista) {
-                            p->mostrarResumen();
-                            std::cout << "\n";
-                        }
+                        buscarMayoresPatrimonioPorGrupo(*personas);
 
                         double tiempo_busqueda = monitor.detener_tiempo();
                         long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
@@ -382,12 +372,7 @@ case 10: // Persona con mayor deuda
             monitor.iniciar_tiempo();
             memoria_inicio = monitor.obtener_memoria();
 
-            auto lista = buscarMayoresDeudasPorCiudad(*personas);
-            std::cout << "\n=== Personas con mayor deuda por ciudad ===\n";
-            for (const auto* p : lista) {
-                p->mostrarResumen();
-                std::cout << "\n";
-            }
+            buscarMayoresDeudasPorCiudad(*personas);
 
             double tiempo_busqueda = monitor.detener_tiempo();
             long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
@@ -400,12 +385,7 @@ case 10: // Persona con mayor deuda
             monitor.iniciar_tiempo();
             memoria_inicio = monitor.obtener_memoria();
 
-            auto lista = buscarMayoresDeudasPorGrupo(*personas);
-            std::cout << "\n=== Personas con mayor deuda por grupo de declaración ===\n";
-            for (const auto* p : lista) {
-                p->mostrarResumen();
-                std::cout << "\n";
-            }
+            buscarMayoresDeudasPorGrupo(*personas);
 
             double tiempo_busqueda = monitor.detener_tiempo();
             long memoria_busqueda = monitor.obtener_memoria() - memoria_inicio;
