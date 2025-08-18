@@ -125,7 +125,7 @@ std::vector<Persona> generarColeccion(int n) {
     return personas;
 }
 
-Persona buscarPorID(std::vector<Persona> personas, std::string id) {
+Persona buscarPorID(const std::vector<Persona>& personas, const std::string& id) {
     auto it = std::lower_bound(personas.begin(), personas.end(), id, 
         [](const Persona& p, const std::string& id) {
             return p.id < id;  // Acceso directo al atributo público
