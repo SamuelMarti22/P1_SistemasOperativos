@@ -97,8 +97,7 @@ Persona generarPersona() {
                  apellidos[rand() % apellidos.size()];
     
     // Genera los demás atributos
-    long id = generarID();
-    //p.id = std::to_string(id);
+    p.id = generarID();
 
     p.ciudadNacimiento = ciudadesColombia[rand() % ciudadesColombia.size()];
     p.fechaNacimiento = generarFechaNacimiento();
@@ -108,7 +107,7 @@ Persona generarPersona() {
     p.patrimonio = randomDouble(0, 2000000000);              // 0 a 2,000M COP
     p.deudas = randomDouble(0, p.patrimonio * 0.7);          // Deudas hasta el 70% del patrimonio
     p.declaranteRenta = (p.ingresosAnuales > 50000000) && (rand() % 100 > 30); // Probabilidad 70% si ingresos > 50M
-    p.grupoDeclaracion = grupoRenta(id % 100, p.declaranteRenta);
+    p.grupoDeclaracion = grupoRenta(std::stol(p.id) % 100, p.declaranteRenta);
     
     return p; // struct, por valor
 }
