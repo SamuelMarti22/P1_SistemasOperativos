@@ -226,12 +226,14 @@ void  buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas) {
             it->second = p;  // copia completa
         }
     }
+    // Configuramos el formato: fijo, con decimales (2) → se imprime como decimal
+    std::cout << std::fixed << std::setprecision(2);
     std::cout << "\n=== Personas con mayor patrimonio por ciudad ===\n";
     for (auto par : mayoresPorCiudad) { 
         std::cout << "- " << par.first << ": "
                   << par.second.getNombre() << " "
                   << par.second.getApellido() << " ("
-                  << std::fixed << std::setprecision(2) << par.second.getPatrimonio() << ")\n";
+                  << par.second.getPatrimonio() << ")\n";
     }  
     
 }
@@ -264,12 +266,15 @@ void buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas) {
         }
     }
 
+    // Configuramos el formato: fijo, con decimales (2) → se imprime como decimal
+    std::cout << std::fixed << std::setprecision(2);
+
     std::cout << "\n=== Personas con mayor patrimonio por grupo de declaración ===\n";
     for (auto par : mayoresPorGrupo) { 
       std::cout << "- " << par.first << ": "
                 << par.second.getNombre() << " "
                 << par.second.getApellido() << " ("
-                << std::fixed << std::setprecision(2) << par.second.getPatrimonio() << ")\n";
+                << par.second.getPatrimonio() << ")\n";
   }
     
 }
@@ -563,12 +568,14 @@ void buscarMayoresDeudasPorCiudad(std::vector<Persona> personas) {
         }
     }
 
+    // Configuramos el formato: fijo, con decimales (2) → se imprime como decimal
+    std::cout << std::fixed << std::setprecision(2);
     std::cout << "\n=== Personas con mayor deuda por ciudad ===\n";
     for (auto par : mayoresPorCiudad) { 
       std::cout << "- " << par.first << ": "
                 << par.second.getNombre() << " "
                 << par.second.getApellido() << " ("
-                << std::fixed << std::setprecision(2) << par.second.getDeudas() << ")\n";
+                << par.second.getDeudas() << ")\n";
   }
 }
 
@@ -600,11 +607,13 @@ void buscarMayoresDeudasPorGrupo(std::vector<Persona> personas) {
         }
     }
 
+    // Configuramos el formato: fijo, con decimales (2) → se imprime como decimal
+    std::cout << std::fixed << std::setprecision(2);
     std::cout << "\n=== Personas con mayor deuda por grupo de declaración ===\n";
     for (auto par : mayoresPorGrupo) { 
       std::cout << "- " << par.first << ": "
                 << par.second.getNombre() << " "
                 << par.second.getApellido() << " ("
-                << std::fixed << std::setprecision(2) << par.second.getDeudas() << ")\n";
+                << par.second.getDeudas() << ")\n";
   }
 }
