@@ -190,63 +190,67 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
 }
 
 /**
- * Obtiene una lista con las personas que tienen el mayor patrimonio en cada ciudad.
+ * Imprime un listado de las personas con mayor patrimonio en cada ciudad.
  * 
  * POR QUÉ: Encontrar a la persona con mayor patrimonio en cada ciudad de Colombia.
  * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
  *       mayor patrimonio encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por ciudad.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de punteros a las personas con mayor patrimonio en cada ciudad.
  */
- void buscarMayoresPatrimonioPorCiudad(const std::vector<Persona>& personas) {
-  // Mapa que guarda, para cada ciudad, un puntero a la Persona con mayor patrimonio encontrada
+
+// Busca e imprime la persona con mayor patrimonio por cada ciudad
+void buscarMayoresPatrimonioPorCiudad(const std::vector<Persona>& personas) {
+  // Mapa que guarda, para cada ciudad, un puntero a la Persona con mayor patrimonio
   std::unordered_map<std::string, const Persona*> mayoresPorCiudad;
-  mayoresPorCiudad.reserve(personas.size()); // Reservamos espacio para evitar rehashes innecesarios
+  mayoresPorCiudad.reserve(64); // Reserva aproximada para evitar rehashes innecesarios
 
-  // Recorremos todas las personas para determinar la de mayor patrimonio por ciudad
+  // Recorremos todas las personas y seleccionamos la de mayor patrimonio por ciudad
   for (const auto& p : personas) {
-      const std::string& ciudad = p.getCiudadNacimiento(); // Obtenemos la ciudad de nacimiento
+      const std::string& ciudad = p.getCiudadNacimiento(); // obtenemos la ciudad
 
-      auto it = mayoresPorCiudad.find(ciudad);
-      // Si la ciudad no está en el mapa o encontramos una persona con mayor patrimonio, actualizamos
-      if (it == mayoresPorCiudad.end() || p.getPatrimonio() > it->second->getPatrimonio()) {
-          mayoresPorCiudad[ciudad] = &p;
+      // Referencia al puntero asociado a esa ciudad en el mapa.
+      // Si la ciudad no existe aún, se crea con valor nullptr.
+      const Persona*& best = mayoresPorCiudad[ciudad];
+
+      // Si no había persona registrada o esta tiene más patrimonio, actualizamos
+      if (best == nullptr || p.getPatrimonio() > best->getPatrimonio()) {
+          best = &p;
       }
   }
 
-  // Mostramos los resultados: una persona con mayor patrimonio por cada ciudad
+  // Encabezado de salida
   std::cout << "\n=== Personas con mayor patrimonio por ciudad ===\n";
-  for (const auto& kv : mayoresPorCiudad) { // kv es un par {ciudad, persona}
-      const std::string& ciudad = kv.first;   // La clave del mapa es la ciudad
-      const Persona* persona = kv.second;     // El valor es un puntero a la Persona correspondiente
-      if (!persona) continue;                 // Seguridad: si no hay persona, saltamos
 
-      // Imprimimos la ciudad y los datos de la persona con mayor patrimonio
+  // Configuramos el formato: fijo, con decimales (2) → se imprime como decimal
+  std::cout << std::fixed << std::setprecision(2);
+
+  // Recorremos el mapa e imprimimos los resultados
+  for (const auto& kv : mayoresPorCiudad) {
+      const std::string& ciudad = kv.first;   // clave del mapa = ciudad
+      const Persona* persona = kv.second;     // valor = puntero a Persona
+      if (!persona) continue;                 // seguridad por si hubiera nulos
+
+      // Mostramos ciudad y datos de la persona con mayor patrimonio
       std::cout << "- " << ciudad << ": "
                 << persona->getNombre() << " "
                 << persona->getApellido() << " ("
-                << std::fixed << std::setprecision(2) << persona->getPatrimonio() << ")\n";
+                << persona->getPatrimonio() << ")\n";
   }
 }
 
-
 /**
- * Obtiene una lista con las personas que tienen el mayor patrimonio por grupo de declaración.
+ * Imprime un listado de las personas con mayor patrimonio por grupo de declaración.
  * 
  * POR QUÉ: Encontrar a la persona con mayor patrimonio en cada grupo de declaración.
  * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
  *       mayor patrimonio encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor patrimonio por grupo.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de punteros a las personas con mayor patrimonio en cada grupo.
  */
- void buscarMayoresPatrimonioPorGrupo(const std::vector<Persona>& personas) {
+ // Busca e imprime la persona con mayor patrimonio por cada grupo
+void buscarMayoresPatrimonioPorGrupo(const std::vector<Persona>& personas) {
   // Mapa que guarda, para cada grupo (char), un puntero a la Persona con mayor patrimonio encontrada
   std::unordered_map<char, const Persona*> mayoresPorGrupo;
-  mayoresPorGrupo.reserve(personas.size()); // Reservamos espacio para evitar rehashes innecesarios
+  mayoresPorGrupo.reserve(personas.size()); // Reservamos espacio (si son pocos grupos, esto se puede ajustar)
 
   // Recorremos todas las personas para determinar la de mayor patrimonio por grupo
   for (const auto& p : personas) {
@@ -259,10 +263,17 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
       }
   }
 
-  // Mostramos los resultados: una persona con mayor patrimonio por cada grupo
+  // Encabezado del reporte
   std::cout << "\n=== Personas con mayor patrimonio por grupo ===\n";
+
+  // Configuramos el formato numérico una sola vez:
+  // - std::fixed: siempre notación decimal (no científica)
+  // - std::setprecision(2): con dos decimales, es decir, número decimal
+  std::cout << std::fixed << std::setprecision(2);
+
+  // Recorremos el mapa e imprimimos los resultados
   for (const auto& kv : mayoresPorGrupo) { // kv es un par {grupo, persona}
-      char grupo = kv.first;               // La clave del mapa es el grupo (char)
+      char grupo = kv.first;               // La clave del mapa es el grupo
       const Persona* persona = kv.second;  // El valor es un puntero a la Persona correspondiente
       if (!persona) continue;              // Seguridad: si no hay persona, saltamos
 
@@ -270,9 +281,9 @@ const Persona* buscarMayorPatrimonio(const std::vector<Persona>& personas) {
       std::cout << "- " << grupo << ": "
                 << persona->getNombre() << " "
                 << persona->getApellido() << " ("
-                << std::fixed << std::setprecision(2) << persona->getPatrimonio() << ")\n";
+                << persona->getPatrimonio() << ")\n";
   }
-} 
+}
 
 
 
@@ -538,64 +549,66 @@ const Persona* buscarMayorDeuda(const std::vector<Persona>& personas) {
 }
 
 /**
- * Obtiene una lista con las personas que tienen la mayor deuda en cada ciudad.
+ * Imprime un listado de las personas con mayor deuda en cada ciudad.
  * 
  * POR QUÉ: Encontrar a la persona con mayor deuda en cada ciudad de la colección.
  * CÓMO: Usando un mapa temporal para ir guardando, por ciudad, la persona con
  *       mayor deuda encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor deuda por ciudad.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de punteros a las personas con mayor deuda en cada ciudad.
  */
  void buscarMayoresDeudasPorCiudad(const std::vector<Persona>& personas) {
   // Mapa que guarda, para cada ciudad, un puntero a la Persona con mayor deuda encontrada
   std::unordered_map<std::string, const Persona*> mayoresPorCiudad;
-  mayoresPorCiudad.reserve(personas.size()); // Reservamos para reducir rehashes
+  mayoresPorCiudad.reserve(personas.size()); // Reservamos (se puede ajustar según nº de ciudades)
 
-  // Recorremos todas las personas y mantenemos la de mayor deuda por ciudad
+  // Recorremos todas las personas y actualizamos si encontramos mayor deuda en la ciudad
   for (const auto& p : personas) {
-      const std::string& ciudad = p.getCiudadNacimiento(); // Obtenemos la ciudad sin copiar
+      const std::string& ciudad = p.getCiudadNacimiento(); // ciudad asociada a la persona
       auto it = mayoresPorCiudad.find(ciudad);
 
-      // Si la ciudad aún no está o esta persona tiene más deuda que la registrada, actualizamos
+      // Si la ciudad no estaba o la persona actual tiene más deuda, actualizamos
       if (it == mayoresPorCiudad.end() || p.getDeudas() > it->second->getDeudas()) {
           mayoresPorCiudad[ciudad] = &p;
       }
   }
 
-  // Mostramos los resultados directamente desde el unordered_map
+  // Encabezado del reporte
   std::cout << "\n=== Personas con mayor deuda por ciudad ===\n";
-  for (const auto& kv : mayoresPorCiudad) { // kv es un par {ciudad, persona*}
-      const std::string& ciudad = kv.first; // Clave: nombre de la ciudad
-      const Persona* persona = kv.second;   // Valor: puntero a la persona con mayor deuda en esa ciudad
-      if (!persona) continue;               // Seguridad ante posibles nulos
 
-      // Imprimimos ciudad y datos de la persona con mayor deuda
+  // Configuramos el formato de salida una sola vez:
+  // - std::fixed: evita notación científica
+  // - std::setprecision(2): con dos decimales → valor decimal
+  std::cout << std::fixed << std::setprecision(2);
+
+  // Recorremos el mapa e imprimimos los resultados
+  for (const auto& kv : mayoresPorCiudad) { // kv: {ciudad, persona}
+      const std::string& ciudad = kv.first; // clave = ciudad
+      const Persona* persona = kv.second;   // valor = persona con mayor deuda
+      if (!persona) continue;               // seguridad ante punteros nulos
+
+      // Mostramos ciudad y datos de la persona con mayor deuda
       std::cout << "- " << ciudad << ": "
                 << persona->getNombre() << " "
                 << persona->getApellido() << " ("
-                << std::fixed << std::setprecision(2) << persona->getDeudas() << ")\n";
+                << persona->getDeudas() << ")\n";
   }
 }
 
 
 
 /**
- * Obtiene una lista con las personas que tienen la mayor deuda por grupo de declaración.
+ * Imprime un listado de las personas con mayor deuda por grupo de declaración.
  * 
  * POR QUÉ: Encontrar a la persona con mayor deuda en cada grupo de declaración.
  * CÓMO: Usando un mapa temporal para ir guardando, por grupo, la persona con
  *       mayor deuda encontrada hasta el momento.
  * PARA QUÉ: Listar y mostrar personas con mayor deuda por grupo.
- * 
- * @param personas   Vector con todas las personas.
- * @return           Vector de punteros a las personas con mayor deuda en cada grupo.
  */
- void buscarMayoresDeudasPorGrupo(const std::vector<Persona>& personas) {
+// Busca e imprime la persona con mayor deuda por cada grupo
+void buscarMayoresDeudasPorGrupo(const std::vector<Persona>& personas) {
   // Mapa que guarda, para cada grupo (char), un puntero a la Persona con mayor deuda encontrada
   std::unordered_map<char, const Persona*> mayoresPorGrupo;
-  mayoresPorGrupo.reserve(personas.size()); // Reservamos para reducir rehashes
+  mayoresPorGrupo.reserve(personas.size()); // Reservamos (puede ser mucho para pocos grupos, ajustar si hace falta)
 
   // Recorremos todas las personas y mantenemos la de mayor deuda por grupo
   for (const auto& p : personas) {
@@ -610,8 +623,15 @@ const Persona* buscarMayorDeuda(const std::vector<Persona>& personas) {
       }
   }
 
-  // Mostramos los resultados directamente desde el unordered_map
+  // Encabezado de salida
   std::cout << "\n=== Personas con mayor deuda por grupo ===\n";
+
+  // Configuramos formato de salida una sola vez:
+  // - std::fixed: evita notación científica
+  // - std::setprecision(0): sin decimales, valor entero
+  std::cout << std::fixed << std::setprecision(0);
+
+  // Recorremos el mapa e imprimimos los resultados
   for (const auto& kv : mayoresPorGrupo) { // kv es un par {grupo, persona*}
       char grupo = kv.first;               // Clave: grupo
       const Persona* persona = kv.second;  // Valor: puntero a la persona con mayor deuda en ese grupo
@@ -621,7 +641,7 @@ const Persona* buscarMayorDeuda(const std::vector<Persona>& personas) {
       std::cout << "- " << grupo << ": "
                 << persona->getNombre() << " "
                 << persona->getApellido() << " ("
-                << std::fixed << std::setprecision(2) << persona->getDeudas() << ")\n";
+                << persona->getDeudas() << ")\n";
   }
 }
 
