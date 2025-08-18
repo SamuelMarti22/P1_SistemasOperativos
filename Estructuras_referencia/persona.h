@@ -19,6 +19,7 @@ struct Persona {
     double patrimonio;            // Valor total de bienes y activos
     double deudas;                // Deudas pendientes
     bool declaranteRenta;         // Si está obligado a declarar renta
+    char grupoDeclaracion;         // Grupo en el que declara si lo hace
 
     // --- Métodos de visualización ---
     void mostrar() const;         // Muestra todos los detalles completos
@@ -36,6 +37,7 @@ inline void Persona::mostrar() const {
     std::cout << "   - Patrimonio: $" << patrimonio << "\n";
     std::cout << "   - Deudas: $" << deudas << "\n";
     std::cout << "   - Declarante de renta: " << (declaranteRenta ? "Sí" : "No") << "\n";
+    std::cout << "   - Grupo de declaracion: " << (grupoDeclaracion) << "\n";
 }
 
 inline void Persona::mostrarResumen() const {

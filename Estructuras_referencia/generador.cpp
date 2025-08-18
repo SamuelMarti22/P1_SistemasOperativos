@@ -52,6 +52,16 @@ std::string generarID() {
     return std::to_string(contador++); // Incrementa después de usar
 }
 
+char grupoRenta(int id, bool declarante){
+    if (declarante){
+        if (id<40){ return 'A';}
+        if (id>39 && id <80) {return 'B';}
+        if (id>79 && id<100) {return 'C';}}
+    else{
+        return 'N';
+    }
+}
+
 double randomDouble(double min, double max) {
     // Generador moderno Mersenne Twister
     static std::mt19937 generator(time(nullptr));
@@ -91,6 +101,8 @@ Persona generarPersona() {
     p.deudas = randomDouble(0, p.patrimonio * 0.7);
     // 70% probabilidad de ser declarante si gana > 50 millones
     p.declaranteRenta = (p.ingresosAnuales > 50000000) && (rand() % 100 > 30);
+    // Grupo declaración de renta a partir del documento
+    p.grupoDeclaracion = grupoRenta(std::stoi(p.id)%100, p.declaranteRenta);
     
     return p; // Retorna la estructura completa
 }
