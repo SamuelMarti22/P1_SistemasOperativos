@@ -81,13 +81,13 @@ Persona buscarMayorPatrimonio(std::vector<Persona> personas);
 /**
  * Obtiene un listado con la persona de mayor patrimonio en cada ciudad.
  */
-std::vector<Persona> buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas);
+void buscarMayoresPatrimonioPorCiudad(std::vector<Persona> personas);
 
 
 /**
  * Obtiene un listado con la persona de mayor patrimonio por grupo de declaración.
  */
-std::vector<Persona> buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas);
+void buscarMayoresPatrimonioPorGrupo(std::vector<Persona> personas);
 
 /**
  * Busca la persona con mayor deuda en todo el país.
@@ -97,12 +97,12 @@ Persona buscarMayorDeuda(std::vector<Persona> personas);
 /**
  * Obtiene un listado con la persona de mayor deuda en cada ciudad.
  */
-std::vector<Persona> buscarMayoresDeudasPorCiudad(std::vector<Persona> personas);
+void buscarMayoresDeudasPorCiudad(std::vector<Persona> personas);
 
 /**
  * Obtiene un listado con la persona de mayor deuda por grupo de declaración.
  */
-std::vector<Persona> buscarMayoresDeudasPorGrupo(std::vector<Persona> personas);
+void buscarMayoresDeudasPorGrupo(std::vector<Persona> personas);
 
 void listarPersonasGrupo(std::vector<Persona> personas, char grupoDeclaracion, int contador);
 
