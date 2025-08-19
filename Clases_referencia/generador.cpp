@@ -165,6 +165,7 @@ std::vector<Persona> generarColeccion(int n) {
   }
 }
 
+
 /**
  * Implementación de buscarMayorPatrimonio.
  * 
@@ -348,6 +349,15 @@ void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>* perso
                   << par.second->getFechaNacimiento() << ")\n";
     }
 }
+
+/**
+ * Imprime un listado de las personas con que pertenecen a un grupo. 
+ * 
+ * POR QUÉ: Encontrar a las personas que pertencen a un grupo determinado.
+ * CÓMO: Usando un ciclo para comparar si corresponde o no al grupo. 
+ * PARA QUÉ: Listar y mostrar personas que si pertencen.
+ */
+ // Busca e imprime la persona con mayor patrimonio por cada grupo. 
 void listarPersonasGrupo(const std::vector<Persona>* personas,char grupoDeclaracion,int* contador) {
     if (!personas) { std::cerr << "[listar] personas == nullptr\n"; return; }
     if (!contador) { std::cerr << "[listar] contador == nullptr\n"; return; }
