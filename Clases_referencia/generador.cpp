@@ -150,20 +150,21 @@ std::vector<Persona> generarColeccion(int n) {
  * CÓMO: Usando un algoritmo de búsqueda secuencial (lineal).
  * PARA QUÉ: Para operaciones de búsqueda en la aplicación.
  */
-const Persona* buscarPorID(const std::vector<Persona>* personas, const std::string* id) {
+const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id) {
     // Usamos lower_bound para encontrar la posición del primer elemento no menor que 'id'
-    auto it = std::lower_bound(personas->begin(), personas->end(), *id, 
+    auto it = std::lower_bound(personas.begin(), personas.end(), id,
         [](const Persona& p, const std::string& id) {
             return p.getId() < id;  // Compara por el ID de la persona
         });
 
     // Verificamos si encontramos el elemento exacto
-    if (it != personas->end() && it->getId() == *id) {
+    if (it != personas.end() && it->getId() == id) {
         return &(*it);  // Retorna un puntero a la persona encontrada
     } else {
         return nullptr;  // Si no se encuentra, devuelve nullptr
     }
 }
+
 
 /**
  * Implementación de buscarMayorPatrimonio.
@@ -348,6 +349,15 @@ void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>* perso
                   << par.second->getFechaNacimiento() << ")\n";
     }
 }
+
+/**
+ * Imprime un listado de las personas con que pertenecen a un grupo. 
+ * 
+ * POR QUÉ: Encontrar a las personas que pertencen a un grupo determinado.
+ * CÓMO: Usando un ciclo para comparar si corresponde o no al grupo. 
+ * PARA QUÉ: Listar y mostrar personas que si pertencen.
+ */
+ // Busca e imprime la persona con mayor patrimonio por cada grupo. 
 void listarPersonasGrupo(const std::vector<Persona>* personas,char grupoDeclaracion,int* contador) {
     if (!personas) { std::cerr << "[listar] personas == nullptr\n"; return; }
     if (!contador) { std::cerr << "[listar] contador == nullptr\n"; return; }

@@ -134,9 +134,8 @@ int main() {
                 
                 std::cout << "\nIngrese el ID a buscar: ";
                 std::cin >> idBusqueda;
-                std::string* idBusqueda= idBusqueda; // (línea original, no modificada)
                 
-                if(const Persona* encontrada = buscarPorID(personas.get(), idBusqueda)) {
+                if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
                     encontrada->mostrar();
                 } else {
                     std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
@@ -263,7 +262,7 @@ int main() {
                 std::cout << "\n1. Listar y contar por calendario especifico (Grupo A,B o C) ";
                 std::cout << "\n2. Listar y contar en todos los calendarios (Grupo A,B y C) ";
                 std::cout << "\n3. Validar Grupo al que pertenece";
-                std::cout << "\n   Ingresar opcion:";
+                std::cout << "\nIngresar opcion:";
                 std::cin >> listadoGrupos;
 
                 switch(listadoGrupos) {
@@ -292,8 +291,8 @@ int main() {
                         // monitor.iniciar_tiempo();
                         std::cout << "\nIngrese el ID a buscar: ";
                         std::cin >> idBusqueda;
-                        std::string* idBusqueda= idBusqueda; // (línea original, no modificada)
-                        if(const Persona* encontrada = buscarPorID(personas.get(), idBusqueda)) {
+
+                        if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
                             encontrada->mostrar();
                         } else {
                             std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
