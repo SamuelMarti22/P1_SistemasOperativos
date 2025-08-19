@@ -429,7 +429,7 @@ int main() {
     default:
       std::cout << "Opción inválida!\n";
     }
-    // // Si se selecciona una opción que no es salir, se muestran estadísticas de la operación
+    
     // // Mostrar estadísticas de la operación (excepto para opciones 4,5,6)
     // if ((opcion >= 0 && opcion <= 3) || (opcion >= 8 && opcion <= 10)) {
     //   double tiempo = monitor.detener_tiempo();
