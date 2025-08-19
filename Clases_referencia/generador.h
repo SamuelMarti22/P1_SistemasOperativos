@@ -62,7 +62,7 @@ std::vector<Persona> generarColeccion(int n);
  * @param id ID a buscar.
  * @return Puntero a la persona encontrada o nullptr si no se encuentra.
  */
-const Persona* buscarPorID(const std::vector<Persona>* personas, const std::string* id);
+ const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id);
 
 /**
  * Busca la persona con mayor patrimonio en todo el país.

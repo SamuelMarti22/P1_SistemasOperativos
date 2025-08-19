@@ -67,7 +67,9 @@ int main() {
         std::string ciudadPersona;
         char calendario;
         int contador = 0;
-        long memoria_inicio;
+        long memoria_inicio = 0;
+        bool midiendo = false;
+
         switch(opcion) {
             case 0: { // Crear nuevo conjunto de datos
                 int n;
@@ -169,7 +171,7 @@ int main() {
                 std::cout << "\nIngrese el ID a buscar: ";
                 std::cin >> idBusqueda;
                 
-                if(const Persona* encontrada = buscarPorID(personas.get(), &idBusqueda)) {
+                if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
                     encontrada->mostrar();
                 } else {
                     std::cout << "No se encontró persona con ID " << idBusqueda << "\n";
@@ -198,6 +200,7 @@ int main() {
     
                     switch (filtradoPersonaLongeva) {
                         case 1: { 
+                            monitor.iniciar_tiempo();
                             long memoria_busqueda = monitor.medir_memoria_funcion_kb([&]{
                             if (const Persona* p = buscarPersonaMasLongevaConCondicion(personas.get())) {
                                 std::cout << "\n=== Persona más longeva en Colombia ===\n";
@@ -332,9 +335,9 @@ int main() {
                             monitor.iniciar_tiempo();
                             long memoria_busqueda = monitor.medir_memoria_funcion_kb([&]{
                             std::cout << "\nIngrese el ID a buscar: ";
+                            std::string idBusqueda;          // <-- no un puntero
                             std::cin >> idBusqueda;
-                            std::string* idBusqueda= idBusqueda; // (línea original, no modificada)
-                            if(const Persona* encontrada = buscarPorID(personas.get(), idBusqueda)) {
+                            if(const Persona* encontrada = buscarPorID(*personas, idBusqueda)) {
                                 encontrada->mostrar();
                             } else {
                                 std::cout << "No se encontró persona con ID " << idBusqueda << "\n";

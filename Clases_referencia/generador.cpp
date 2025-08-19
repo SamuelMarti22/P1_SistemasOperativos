@@ -150,19 +150,19 @@ std::vector<Persona> generarColeccion(int n) {
  * CÓMO: Usando un algoritmo de búsqueda secuencial (lineal).
  * PARA QUÉ: Para operaciones de búsqueda en la aplicación.
  */
-const Persona* buscarPorID(const std::vector<Persona>* personas, const std::string* id) {
-    // Usamos lower_bound para encontrar la posición del primer elemento no menor que 'id'
-    auto it = std::lower_bound(personas->begin(), personas->end(), *id, 
-        [](const Persona& p, const std::string& id) {
-            return p.getId() < id;  // Compara por el ID de la persona
-        });
+ const Persona* buscarPorID(const std::vector<Persona>& personas, const std::string& id) {
+  // Usamos lower_bound para encontrar la posición del primer elemento no menor que 'id'
+  auto it = std::lower_bound(personas.begin(), personas.end(), id,
+      [](const Persona& p, const std::string& id) {
+          return p.getId() < id;  // Compara por el ID de la persona
+      });
 
-    // Verificamos si encontramos el elemento exacto
-    if (it != personas->end() && it->getId() == *id) {
-        return &(*it);  // Retorna un puntero a la persona encontrada
-    } else {
-        return nullptr;  // Si no se encuentra, devuelve nullptr
-    }
+  // Verificamos si encontramos el elemento exacto
+  if (it != personas.end() && it->getId() == id) {
+      return &(*it);  // Retorna un puntero a la persona encontrada
+  } else {
+      return nullptr;  // Si no se encuentra, devuelve nullptr
+  }
 }
 
 /**
