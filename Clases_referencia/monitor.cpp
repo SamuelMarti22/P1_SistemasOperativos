@@ -1,6 +1,25 @@
 #include "monitor.h"
-#include <unistd.h> // sysconf
-#include <cstdio>   // FILE, fscanf
+
+#include <unistd.h>         // sysconf, fork, _exit
+#include <cstdio>           // FILE, fscanf, perror
+#include <sys/resource.h>   // getrusage, rusage
+#include <sys/wait.h>       // wait4
+#include <algorithm>        // std::max
+#include <iostream>         // std::cout, std::cerr
+#include <fstream>          // std::ofstream
+
+// --- helper: ru_maxrss en KB ---
+namespace {
+    long ru_maxrss_kb_() {
+        rusage u{};
+        if (getrusage(RUSAGE_SELF, &u) != 0) return 0;
+    #if defined(__linux__)
+        return static_cast<long>(u.ru_maxrss);        // Linux: ya está en KB
+    #else
+        return static_cast<long>(u.ru_maxrss / 1024); // Otros: bytes -> KB
+    #endif
+    }
+}
 
 /**
  * Inicia el cronómetro.
@@ -63,6 +82,46 @@ long Monitor::obtener_memoria() {
  * CÓMO: Guardando un nuevo Registro en el vector y actualizando acumulados.
  * PARA QUÉ: Tener un histórico de rendimiento.
  */
+
+// ======= Memoria pico (delta en el mismo proceso) =======
+void Monitor::iniciar_memoria_pico() {
+    peak_before_kb_ = ru_maxrss_kb_();
+}
+
+long Monitor::memoria_pico_delta_kb() const {
+    long now = ru_maxrss_kb_();
+    return std::max(0L, now - peak_before_kb_);
+}
+
+// ======= Medir memoria por función (proceso hijo) =======
+long Monitor::medir_memoria_funcion_kb(const std::function<void()>& fn) {
+    pid_t pid = fork();
+    if (pid < 0) {
+        std::cerr << "fork() falló\n";
+        return 0;
+    }
+
+    if (pid == 0) {
+        // --- Proceso hijo ---
+        try { fn(); } catch (...) { /* no propagar al padre */ }
+        _exit(0); // terminar el hijo inmediatamente
+    }
+
+    // --- Proceso padre ---
+    int status = 0;
+    rusage ru{};
+    if (wait4(pid, &status, 0, &ru) == -1) {
+        std::cerr << "wait4() falló\n";
+        return 0;
+    }
+
+#if defined(__linux__)
+    return static_cast<long>(ru.ru_maxrss);        // KB en Linux
+#else
+    return static_cast<long>(ru.ru_maxrss / 1024); // bytes -> KB en otros
+#endif
+}
+
 void Monitor::registrar(const std::string& operacion, double tiempo, long memoria) {
     registros.push_back({operacion, tiempo, memoria});
     total_tiempo += tiempo;
