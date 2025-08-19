@@ -38,7 +38,7 @@ std::vector<Persona> generarColeccion(int n);
 
 // Busca persona por ID en un vector
 // Retorna una copia de la persona si la encuentra, o una persona vacía si no
-Persona buscarPorID(const std::vector<Persona>& personas, const std::string& id);
+Persona buscarPorID(std::vector<Persona> personas, std::string id);
 
 
 /**
