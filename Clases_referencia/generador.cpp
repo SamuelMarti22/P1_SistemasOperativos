@@ -348,14 +348,18 @@ void mostrarPersonasMasLongevaPorCiudad_Vector(const std::vector<Persona>* perso
                   << par.second->getFechaNacimiento() << ")\n";
     }
 }
+void listarPersonasGrupo(const std::vector<Persona>* personas,char grupoDeclaracion,int* contador) {
+    if (!personas) { std::cerr << "[listar] personas == nullptr\n"; return; }
+    if (!contador) { std::cerr << "[listar] contador == nullptr\n"; return; }
 
-void listarPersonasGrupo(const std::vector<Persona>* personas, char grupoDeclaracion, int* contador) {
-    // Recorremos todas las personas y contamos las que cumplen con la condición
-    std::cout << "Persona del grupo " << grupoDeclaracion << " encontradas:"<<std::endl;
+    // Opcional: normalizar a mayúscula por si el usuario escribe 'a'/'b'/'c'
+    grupoDeclaracion = std::toupper(static_cast<unsigned char>(grupoDeclaracion));
+
+    std::cout << "Personas del grupo " << grupoDeclaracion << " encontradas:\n";
     for (const Persona& p : *personas) {
         if (p.getGrupoDeclaracion() == grupoDeclaracion) {
-            std::cout << p.getId()<<" "<<p.getNombre()<<" "<<p.getPatrimonio() << std::endl;
-            ++(*contador);  
+            std::cout << p.getId() << " " << p.getNombre() << " " << p.getPatrimonio() << "\n";
+            ++(*contador);
         }
     }
 }
