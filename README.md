@@ -1,5 +1,5 @@
 # Create a README.md file with the requested content
-readme_content = """# Proyecto: Comparativa C++ — Clases vs Estructuras · Valor vs Punteros
+Proyecto: Comparativa C++ — Clases vs Estructuras · Valor vs Punteros
 
 Estudio corto de rendimiento y complejidad sobre operaciones con **Personas** en C++14.  
 Se implementan **4 variantes** del mismo programa para comparar **modelo de datos** y **técnica de paso/acceso**:
