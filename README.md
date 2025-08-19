@@ -24,8 +24,8 @@ Se implementan **4 variantes** del mismo programa para comparar **modelo de dato
 ## Drive
 En el siguiente enlace encontrará el video explicativo, la evidencia de las metricas y el analisis del mismo
 https://drive.google.com/drive/folders/1KFjlo0IqYnI-6Lye1jmXSC16zY92x3eJ?usp=sharing
----
 
+---
 ## Requisitos
 - Linux/macOS (o WSL) con `g++ (C++14)` y `make`.
 
