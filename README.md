@@ -21,6 +21,16 @@ Se implementan **4 variantes** del mismo programa para comparar **modelo de dato
   - Consultas por ciudad / mayor patrimonio / mayor deuda / persona más longeva.
 - Comparar impacto de **clases vs estructuras** y **valor vs punteros**.
 
+## Analisis
+
+| Variante               |    N | Generación (ms) | Memoria gen (KB) | Buscar ID (ms) | Listar grupo A (ms) |
+|------------------------|-----:|----------------:|-----------------:|---------------:|--------------------:|
+| Clases_valor           | 100k |                 |                  |                |                     |
+| Clases_referencia      | 100k |                 |                  |                |                     |
+| Estructuras_valor      | 100k |                 |                  |                |                     |
+| Estructuras_referencia | 100k |                 |                  |                |                     |
+
+
 ## Drive
 En el siguiente enlace encontrará el video explicativo, la evidencia de las metricas y el analisis del mismo
 https://drive.google.com/drive/folders/1KFjlo0IqYnI-6Lye1jmXSC16zY92x3eJ?usp=sharing
