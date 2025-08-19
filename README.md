@@ -26,7 +26,7 @@ Se implementan **4 variantes** del mismo programa para comparar **modelo de dato
 | Variante               |    N | Generación (ms) | Memoria gen (KB) | Buscar ID (ms) | Listar grupo A (ms) |
 |------------------------|-----:|----------------:|-----------------:|---------------:|--------------------:|
 | Clases_valor           | 10M |        2537.75         |       1970776           |        9555.62        |         11272.36            |
-| Clases_apuntador    | 10M |        3343.28         |       1970816           |        6944.74        |            1972508         |
+| Clases_apuntador    | 10M |        3343.28         |       1970816           |        6944.74        |            43483.47        |
 | Estructuras_valor      | 10M |                 |                  |                |                     |
 | Estructuras_apuntador | 10M |   35926.4              |    2018760              |      1099.47          |       52418.86              |
 
