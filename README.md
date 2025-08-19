@@ -1,4 +1,4 @@
-# Create a README.md file with the requested content
+# Manejo de Grandes Volúmenes de Datos en Linux con C/C++
 Proyecto: Comparativa C++ — Clases vs Estructuras · Valor vs Punteros
 
 Estudio corto de rendimiento y complejidad sobre operaciones con **Personas** en C++14.  
