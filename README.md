@@ -25,7 +25,7 @@ Se implementan **4 variantes** del mismo programa para comparar **modelo de dato
 
 | Variante               |    N | Generación (ms) | Memoria gen (KB) | Buscar ID (ms) | Listar grupo A (ms) |
 |------------------------|-----:|----------------:|-----------------:|---------------:|--------------------:|
-| Clases_valor           | 100k |                 |                  |                |                     |
+| Clases_valor           | 100k |      3343.28           |       1970816           |      6944.74          |       1972508              |
 | Clases_referencia      | 100k |                 |                  |                |                     |
 | Estructuras_valor      | 100k |                 |                  |                |                     |
 | Estructuras_referencia | 100k |                 |                  |                |                     |
