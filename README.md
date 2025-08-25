@@ -48,7 +48,7 @@ Se desarrollaron cuatro implementaciones equivalentes que solo difieren en:
 
 Toda la evidencia del proyecto (video explicativo, métricas completas y análisis detallado) se encuentra disponible en el siguiente enlace:  
 
-🔗 [Google Drive – Evidencias y análisis](https://drive.google.com/drive/folders/1KFjlo0IqYnI-6Lye1jmXSC16zY92x3eJ?usp=sharing)  
+🔗 [Google Drive – Evidencias y análisis](https://drive.google.com/drive/folders/1yiQmabKx419GnL7a3jrBs_pqHo-rsx4v)  
 
 ---
 
