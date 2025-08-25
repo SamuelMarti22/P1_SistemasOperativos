@@ -50,6 +50,11 @@ Toda la evidencia del proyecto (video explicativo, métricas completas y anális
 
 🔗 [Google Drive – Evidencias y análisis](https://drive.google.com/drive/folders/1yiQmabKx419GnL7a3jrBs_pqHo-rsx4v)  
 
+### 📄 Acceso directo al análisis
+
+[🔗 Ver archivo de análisis](https://drive.google.com/file/d/1Pdc9isfk5fCHbyoxGiUepS7l2JvockE0/view?usp=drive_link)
+
+
 ---
 
 ## ⚙️ Requisitos de ejecución  
